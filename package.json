@@ -1,0 +1,38 @@
+{
+  "name": "@south-paw/discord-music-bot",
+  "version": "1.0.0",
+  "description": "A self-hosted Node.js music bot for Discord servers.",
+  "keywords": [],
+  "homepage": "https://github.com/South-Paw/discord-music-bot",
+  "bugs": {
+    "url": "https://github.com/South-Paw/discord-music-bot/issues",
+    "email": "hello@southpaw.co.nz"
+  },
+  "license": "GPL-3.0",
+  "author": {
+    "name": "Alex Gabites",
+    "email": "hello@southpaw.co.nz",
+    "url": "http://southpaw.co.nz/"
+  },
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/South-Paw/discord-music-bot"
+  },
+  "scripts": {
+    "lint": "",
+    "test": ""
+  },
+  "dependencies": {
+    "discord.js": "^11.1.0",
+    "node-opus": "^0.2.6"
+  },
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.2",
+    "eslint-plugin-import": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}
