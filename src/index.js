@@ -27,7 +27,9 @@ class MusicBot {
     this.textChannelId = textChannelId;
 
     this.activeTextChannel = null;
+
     this.activeVoiceChannel = null;
+    this.activeVoiceConnection = null;
 
     this.commands = commands;
 
@@ -35,6 +37,11 @@ class MusicBot {
       autoReconnect: true,
       max_message_cache: 0,
     });
+  }
+
+  setActiveVoiceConnection(newVoiceChannel, newVoiceConnection) {
+    this.activeVoiceChannel = newVoiceChannel;
+    this.activeVoiceConnection = newVoiceConnection;
   }
 
   findCommand(command) {
