@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,11 +37,14 @@ class MusicBot {
     });
   }
 
-  // eslint-disable-next-line
   findCommand(command) {
     for (let i = 0; i < this.commands.length; i += 1) {
-      if (this.commands[i].info.name === command.toLowerCase()) {
-        return this.commands[i];
+      const thisCmd = this.commands[i];
+
+      for (let j = 0; j < thisCmd.info.aliases.length; j += 1) {
+        if (thisCmd.info.aliases[j] === command.toLowerCase()) {
+          return thisCmd;
+        }
       }
     }
 
@@ -58,6 +61,9 @@ class MusicBot {
     } else {
       command.run(this, message, args);
     }
+
+    // clean up messages ?
+    // timeout on the message and delete after certain amount of time?
   }
 
   run() {
@@ -94,7 +100,6 @@ class MusicBot {
 
     if (isNotOwnMessage) {
       if (isIncommandsChannel) {
-        // If the client was mentioned.
         if (message.isMentioned(this.bot.user)) {
           this.activeTextChannel.send(`Hey ${message.member.toString()}, you should try \`!help\` for a list of commands. :thumbsup:`);
         } else if (message.content[0] === CONSTANTS.defaults.commandIdentifer) {
