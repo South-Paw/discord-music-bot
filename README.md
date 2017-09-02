@@ -50,7 +50,7 @@ const config = {
     },
   },
   // customize log messages... I dunno why you'd want to do it, but I've allowed for it all the same.
-  logMessages: {
+  logging: {
     connected: 'I\'m awesome and ready to bang baby!',
   },
 };

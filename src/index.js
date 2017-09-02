@@ -19,7 +19,7 @@
 const Discord = require('discord.js');
 const format = require('string-format');
 
-const defaultLogMessages = require('./config/logMessages.js');
+const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');
 const defaultSettings = require('./config/settings.js');
 
@@ -42,9 +42,9 @@ class MusicBot {
     this.serverId = userConfig.serverId;
     this.textChannelId = userConfig.textChannelId;
 
-    // Load default messages and any user defined messages.
-    this.defaultLogMessages = defaultLogMessages;
-    this.logMessages = userConfig.logMessages;
+    // Load default logging messages and any user defined logging messages.
+    this.defaultLogging = defaultLogging;
+    this.logging = userConfig.logging;
 
     // Load default bot replies and any user defined replies.
     this.defaultReplies = defaultReplies;
@@ -76,9 +76,9 @@ class MusicBot {
    */
   getLogMsg(key) {
     return (
-      (this.logMessages && this.logMessages[key] != null)
-        ? this.logMessages[key]
-        : this.defaultLogMessages[key]
+      (this.logging && this.logging[key] != null)
+        ? this.logging[key]
+        : this.defaultLogging[key]
     );
   }
 
