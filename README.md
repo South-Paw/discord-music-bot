@@ -1,6 +1,58 @@
 # discord-music-bot
 A self-hosted Node.js music bot for Discord servers.
 
+**This is still very much a work-in-progress.**
+
+* Documentation will be added when there's something a bit more tangible to use.
+* A release will be tagged when it's a bit more fleshed out.
+
+Until then, watch this space and let me know if there's anything I should consider building into it.
+
+If you do get this running, use `!help` to get a list of commands.
+
+# Example usage
+
+## Basic
+
+```js
+const MusicBot = require('./src/index.js');
+
+const config = {
+  token: 'YOUR DISCORD TOKEN',
+  serverId: 'YOUR SERVER ID',
+  textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
+};
+
+const musicBot = new MusicBot(config);
+
+musicBot.run();
+```
+
+## Advanced
+
+```js
+const MusicBot = require('./src/index.js');
+
+const config = {
+  token: 'YOUR DISCORD TOKEN',
+  serverId: 'YOUR SERVER ID',
+  textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
+  settings: {
+    commandPrefix: '~', // custom command prefix
+  },
+  messages: {
+    // custom bot message (see src/config/messages for keys).
+    reply: {
+      unknownCommand: 'BEEP... unknown command!',
+    },
+  },
+};
+
+const musicBot = new MusicBot(config);
+
+musicBot.run();
+```
+
 # License
 
 Copyright (C) 2017 Alex Gabites

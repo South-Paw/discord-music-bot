@@ -1,6 +1,6 @@
 {
   "name": "@south-paw/discord-music-bot",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A self-hosted Node.js music bot for Discord servers.",
   "keywords": [],
   "homepage": "https://github.com/South-Paw/discord-music-bot",
@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "discord.js": "^11.1.0",
-    "node-opus": "^0.2.6"
+    "node-opus": "^0.2.6",
+    "string-format": "^0.5.0"
   },
   "devDependencies": {
     "eslint": "^4.5.0",

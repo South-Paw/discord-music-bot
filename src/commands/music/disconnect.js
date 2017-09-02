@@ -1,3 +1,5 @@
+const REPLY = require('../../util/constants.js').REPLY;
+
 /**
  * Disconnect command.
  *
@@ -12,14 +14,9 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     musicbot.activeVoiceChannel.leave();
     musicbot.setActiveVoiceConnection(null, null);
   } else {
-    /*
-      FIXME:
-      There is a possible issue here... this code is supposed to be for if the bot disconnects and
-      reconnects or is restarted but it has not left or been kicked from a channel in Discord...
-      so it has no memory of what voice channel it was in so it can leave it upon reconnecting.
-
-      The idea is/was to get the bot's user, get the voice channel and then .leave() it - but this
-      doesn't seem to work at all...
+    /**
+     * There is an edge case in disconnections that I've observed in other bots and have attempted
+     * to fix here - however it doesn't seem that this code manages to achieve it. See issue #1.
      */
     const thisServer = musicbot.bot.guilds.get(musicbot.serverId);
 
@@ -32,7 +29,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     if (currentVoiceChannel != null) {
       currentVoiceChannel.leave();
     } else {
-      msg.reply('I can\'t disconnect if I\'m not connected...');
+      msg.reply(musicbot.getMessage(REPLY, 'disconnectCommandCantLeave'));
     }
   }
 };

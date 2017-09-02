@@ -1,6 +1,7 @@
+const format = require('string-format');
 const RichEmbed = require('discord.js').RichEmbed;
 
-const commandIdentifer = require('../../util/constants.js').defaults.commandIdentifer;
+const REPLY = require('../../util/constants.js').REPLY;
 
 /**
  * Help command.
@@ -8,46 +9,46 @@ const commandIdentifer = require('../../util/constants.js').defaults.commandIden
  * Creates a rich embed for each command, mentions the user who issued the command and then sends
  * the list of rich embeds back to the user.
  *
- * @param {object} musicbot - The musicbot.
+ * @param {object} musicbot - The musicbot object.
  * @param {object} msg      - The message object that called the command.
  * @param {array}  args     - List of arugments
  */
 const run = function run(musicbot, msg, args) { // eslint-disable-line
-  msg.channel.startTyping();
-
+  const commandPrefix = musicbot.getSetting('commandPrefix');
   const commandList = [];
 
   for (let i = 0; i < musicbot.commands.length; i += 1) {
     const command = musicbot.commands[i].info;
 
-    const commandUsage = commandIdentifer + command.usage;
     let commandAliases = '';
 
     for (let j = 0; j < command.aliases.length; j += 1) {
-      commandAliases += `\`${commandIdentifer}${command.aliases[j]}\` `;
+      commandAliases += `\`${commandPrefix}${command.aliases[j]}\` `;
     }
 
+    let commandDescription = `${command.description}\n\n`;
+    commandDescription += `**Usage:** \`${commandPrefix + command.usage}\`\n\n`;
+    commandDescription += `**Aliases:** ${commandAliases}`;
+
     commandList.push(new RichEmbed()
-      .setAuthor(`${commandIdentifer}${command.name}`)
-      .setDescription(`${command.description}\n\n**Usage:** \`${commandUsage}\`\n\n**Aliases:** ${commandAliases}`));
+      .setAuthor(`${commandPrefix}${command.name}`)
+      .setDescription(commandDescription));
   }
 
-  msg.channel.send(`Here you go ${msg.member.toString()};`);
+  msg.channel.send(format(musicbot.getMessage(REPLY, 'helpCommandReply'), msg.member.toString()));
 
   for (let i = 0; i < commandList.length; i += 1) {
     const embed = commandList[i];
 
     msg.channel.send({ embed });
   }
-
-  msg.channel.stopTyping();
 };
 
 const info = {
   name: 'help',
   aliases: ['help', 'h'],
   usage: 'help',
-  description: 'Get a list of all available commands, each with a usage and description.',
+  description: 'Get a list of all commands, with a usage and description for each.',
 };
 
 module.exports = {
