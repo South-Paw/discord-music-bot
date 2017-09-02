@@ -28,10 +28,19 @@ module.exports = {
 
   setAvatarCommand: {
     // reply
-    success: ':thumbsup: Avatar successfully set!',
+    success: ':ok_hand: Avatar successfully set!',
     // reply + error
     error: 'Unable to set avatar',
     // reply
     invalidUrl: 'Are you sure that\'s a valid URL..?',
+  },
+
+  setUsernameCommand: {
+    // reply
+    success: ':ok_hand: Username successfully set!',
+    // reply + error
+    error: 'Unable to set username',
+    // reply
+    invalidUsername: 'Uhh... that doesn\'t seem to be something I could name myself...',
   },
 };
