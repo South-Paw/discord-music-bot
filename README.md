@@ -18,6 +18,7 @@ If you do get this running, use `!help` to get a list of commands.
 const MusicBot = require('./src/index.js');
 
 const config = {
+  // these 3 are always required
   token: 'YOUR DISCORD TOKEN',
   serverId: 'YOUR SERVER ID',
   textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
@@ -34,17 +35,23 @@ musicBot.run();
 const MusicBot = require('./src/index.js');
 
 const config = {
+  // these 3 are always required
   token: 'YOUR DISCORD TOKEN',
   serverId: 'YOUR SERVER ID',
   textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
+  // override any default settings
   settings: {
-    commandPrefix: '~', // custom command prefix
+    commandPrefix: '~',
   },
-  messages: {
-    // custom bot message (see src/config/messages for keys).
-    reply: {
-      unknownCommand: 'BEEP... unknown command!',
+  // customize the replies you receive (see `src/config/replies.js` for an idea of structure here).
+  replies: {
+    general: {
+      unknownCommand: 'Looks like I don\'t know that one!',
     },
+  },
+  // customize log messages... I dunno why you'd want to do it, but I've allowed for it all the same.
+  logMessages: {
+    connected: 'I\'m awesome and ready to bang baby!',
   },
 };
 

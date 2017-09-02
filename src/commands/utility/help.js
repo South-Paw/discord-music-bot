@@ -1,7 +1,7 @@
 const format = require('string-format');
 const RichEmbed = require('discord.js').RichEmbed;
 
-const REPLY = require('../../util/constants.js').REPLY;
+const commandGroup = 'helpCommand';
 
 /**
  * Help command.
@@ -35,7 +35,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
       .setDescription(commandDescription));
   }
 
-  msg.channel.send(format(musicbot.getMessage(REPLY, 'helpCommandReply'), msg.member.toString()));
+  msg.channel.send(format(musicbot.getReplyMsg(commandGroup, 'reply'), msg.member.toString()));
 
   for (let i = 0; i < commandList.length; i += 1) {
     const embed = commandList[i];

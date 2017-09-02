@@ -19,13 +19,13 @@
 const Discord = require('discord.js');
 const format = require('string-format');
 
+const defaultLogMessages = require('./config/logMessages.js');
+const defaultReplies = require('./config/replies.js');
 const defaultSettings = require('./config/settings.js');
-const defaultMessages = require('./config/messages.js');
 
 const commands = require('./commands/index.js');
 
-const LOG = require('./util/constants.js').LOG;
-const REPLY = require('./util/constants.js').REPLY;
+const commandGroup = 'general';
 
 class MusicBot {
   /**
@@ -42,13 +42,17 @@ class MusicBot {
     this.serverId = userConfig.serverId;
     this.textChannelId = userConfig.textChannelId;
 
+    // Load default messages and any user defined messages.
+    this.defaultLogMessages = defaultLogMessages;
+    this.logMessages = userConfig.logMessages;
+
+    // Load default bot replies and any user defined replies.
+    this.defaultReplies = defaultReplies;
+    this.replies = userConfig.replies;
+
     // Load default settings and any user defined settings.
     this.defaultSettings = defaultSettings;
     this.settings = userConfig.settings;
-
-    // Load default messages and any user defined messages.
-    this.defaultMessages = defaultMessages;
-    this.messages = userConfig.messages;
 
     // Load bot commands.
     this.commands = commands;
@@ -64,6 +68,37 @@ class MusicBot {
   }
 
   /**
+   * Looks for a given key in the user defined log messages object and falls back onto the default
+   * log message list if it was unset.
+   *
+   * @param  {string} key - The key to look for in the log messages.
+   * @return {string}     - The corresponding message for the key.
+   */
+  getLogMsg(key) {
+    return (
+      (this.logMessages && this.logMessages[key] != null)
+        ? this.logMessages[key]
+        : this.defaultLogMessages[key]
+    );
+  }
+
+  /**
+   * Looks for a given key in the user defined replies object and falls back onto the default
+   * replies list if it was unset.
+   *
+   * @param  {string} group - The message group to look in.
+   * @param  {string} key   - The key to look for in the message group.
+   * @return {string}       - The corresponding message for the group and key.
+   */
+  getReplyMsg(group, key) {
+    return (
+      (this.replies && this.replies[group] && this.replies[group][key] != null)
+        ? this.replies[group][key]
+        : this.defaultReplies[group][key]
+    );
+  }
+
+  /**
    * Look for a given key in the user defined settings and fallback to the defaults if unset.
    *
    * @param  {string} key    - The key to look for in the settings object.
@@ -74,22 +109,6 @@ class MusicBot {
       (this.settings && this.settings[key] != null)
         ? this.settings[key]
         : this.defaultSettings[key]
-    );
-  }
-
-  /**
-   * Looks for a given key in the user messages object and falls back onto the default message list
-   * if it was unset.
-   *
-   * @param  {string} type - The message group to look within (either `log` or `reply`).
-   * @param  {string} key  - The key to look for in the message group.
-   * @return {string}      - The corresponding message for the group and key.
-   */
-  getMessage(type, key) {
-    return (
-      (this.messages && this.messages[type] && this.messages[type][key] != null)
-        ? this.messages[type][key]
-        : this.defaultMessages[type][key]
     );
   }
 
@@ -137,7 +156,7 @@ class MusicBot {
     const args = params.slice(1);
 
     if (command === false) {
-      message.reply(this.getMessage(REPLY, 'unknownCommand'));
+      message.reply(this.getReplyMsg(commandGroup, 'unknownCommand'));
     } else {
       command.run(this, message, args);
     }
@@ -154,7 +173,7 @@ class MusicBot {
     this.bot.on('disconnect', event => this.onDisconnect(event));
 
     if (!this.token || !this.serverId || !this.textChannelId) {
-      throw new Error(this.getMessage(LOG, 'configMissing'));
+      throw new Error(this.getLogMsg('configMissing'));
     }
 
     this.bot.login(this.token);
@@ -164,19 +183,19 @@ class MusicBot {
     const server = this.bot.guilds.get(this.serverId);
 
     if (server == null) {
-      throw new Error(format(this.getMessage(LOG, 'unableToGetGuild'), this.serverId));
+      throw new Error(format(this.getLogMsg('unableToGetGuild'), this.serverId));
     }
 
     this.activeTextChannel = server.channels.find(channel =>
       (channel.id === this.textChannelId) && (channel.type === 'text'));
 
     if (this.activeTextChannel == null) {
-      throw new Error(format(this.getMessage(LOG, 'unableToGetTextChannel'), this.textChannelId));
+      throw new Error(format(this.getLogMsg('unableToGetTextChannel'), this.textChannelId));
     }
 
     this.bot.user.setGame();
 
-    console.log(this.getMessage(LOG, 'connected'));
+    console.log(this.getLogMsg('connected'));
   }
 
   onMessage(message) {
@@ -186,7 +205,7 @@ class MusicBot {
     if (isNotOwnMessage) {
       if (isInCommandsChannel) {
         if (message.isMentioned(this.bot.user)) {
-          message.channel.send(format(this.getMessage(REPLY, 'mentionedMessage'), message.member.toString(), `${this.getSetting('commandPrefix')}help`));
+          message.channel.send(format(this.getReplyMsg(commandGroup, 'mentionedMessage'), message.member.toString(), `${this.getSetting('commandPrefix')}help`));
         } else if (message.content[0] === this.getSetting('commandPrefix')) {
           this.handleCommand(message);
         }
@@ -195,7 +214,7 @@ class MusicBot {
   }
 
   onDisconnect(event) {
-    console.log(format(this.getMessage(LOG, 'disconnected'), event.reason, event.code));
+    console.log(format(this.getLogMsg('disconnected'), event.reason, event.code));
   }
 }
 

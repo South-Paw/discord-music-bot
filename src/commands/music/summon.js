@@ -1,6 +1,6 @@
 const format = require('string-format');
 
-const REPLY = require('../../util/constants.js').REPLY;
+const commandGroup = 'summonCommand';
 
 /**
  * Summon command.
@@ -17,9 +17,9 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
   if (msg.member.voiceChannel != null) {
     callersChannel.join()
       .then(connection => musicbot.setActiveVoiceConnection(callersChannel, connection))
-      .catch(error => msg.reply(format(musicbot.getMessage(REPLY, 'summonCommandCouldntConnect'), error.message)));
+      .catch(error => msg.reply(format(musicbot.getReplyMsg(commandGroup, 'couldntConnect'), error.message)));
   } else {
-    msg.reply(musicbot.getMessage(REPLY, 'summonCommandNotInVoice'));
+    msg.reply(musicbot.getReplyMsg(commandGroup, 'notInVoiceChannel'));
   }
 };
 
