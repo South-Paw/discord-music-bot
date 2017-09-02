@@ -25,7 +25,7 @@ const run = function run(musicbot, msg, args) {
 };
 
 const info = {
-  name: 'setavatar',
+  name: 'Set Avatar',
   aliases: ['setavatar'],
   usage: 'setavatar <image url>',
   description: 'Set the bot\'s avatar to the given url (overrides the previous image).',

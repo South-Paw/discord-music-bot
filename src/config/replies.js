@@ -10,8 +10,8 @@ module.exports = {
   },
 
   helpCommand: {
-    // message | @user
-    reply: 'Here you go {};',
+    // reply | help command
+    unknown: 'I can\'t see a command or alias for that one... why don\'t you try `{}`?',
   },
 
   summonCommand: {

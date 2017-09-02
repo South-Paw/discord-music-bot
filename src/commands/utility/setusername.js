@@ -22,7 +22,7 @@ const run = function run(musicbot, msg, args) {
 };
 
 const info = {
-  name: 'setusername',
+  name: 'Set Username',
   aliases: ['setusername'],
   usage: 'setusername <new username>',
   description: 'Set the bot\'s username.',
