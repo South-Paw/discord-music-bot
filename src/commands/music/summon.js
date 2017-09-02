@@ -17,7 +17,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
   if (msg.member.voiceChannel != null) {
     callersChannel.join()
       .then(connection => musicbot.setActiveVoiceConnection(callersChannel, connection))
-      .catch(error => msg.reply(format(musicbot.getReplyMsg(commandGroup, 'couldntConnect'), error.message)));
+      .catch(error => msg.reply(`${musicbot.getReplyMsg(commandGroup, 'couldntConnect')}:\n\`\`\`${error.message}\`\`\``));
   } else {
     msg.reply(musicbot.getReplyMsg(commandGroup, 'notInVoiceChannel'));
   }

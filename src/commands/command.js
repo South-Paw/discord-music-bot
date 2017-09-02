@@ -14,7 +14,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
 const info = {
   name: 'command-name',
   aliases: ['multiple', 'command', 'aliases'],
-  usage: 'command-name req1 req2 [opt1 [opt2]]',
+  usage: 'command-name <req1> <req2> [opt1 [opt2]]',
   description: 'human readable command description',
 };
 

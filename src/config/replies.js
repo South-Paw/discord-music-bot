@@ -15,8 +15,8 @@ module.exports = {
   },
 
   summonCommand: {
-    // reply | error message
-    couldntConnect: 'I couldn\'t connect to your voice channel:\n```{}```',
+    // reply + error
+    couldntConnect: 'I couldn\'t connect to your voice channel',
     // reply
     notInVoiceChannel: 'You need to be in a voice channel to summon me!',
   },
@@ -24,5 +24,14 @@ module.exports = {
   disconnectCommand: {
     // reply
     cantLeave: 'I can\'t disconnect if I\'m not connected...',
+  },
+
+  setAvatarCommand: {
+    // reply
+    success: ':thumbsup: Avatar successfully set!',
+    // reply + error
+    error: 'Unable to set avatar',
+    // reply
+    invalidUrl: 'Are you sure that\'s a valid URL..?',
   },
 };

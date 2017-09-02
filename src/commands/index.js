@@ -4,9 +4,11 @@ const DISCONNECT_COMMAND = require('./music/disconnect.js');
 
 // Utility commands
 const HELP_COMMAND = require('./utility/help.js');
+const SET_AVATAR_COMMAND = require('./utility/setavatar.js');
 
 module.exports = [
   SUMMON_COMMAND,
   DISCONNECT_COMMAND,
   HELP_COMMAND,
+  SET_AVATAR_COMMAND,
 ];
