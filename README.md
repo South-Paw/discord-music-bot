@@ -87,13 +87,15 @@ const config = {
         disconnect: true,
       },
     },
-    // you can of course define multiple users to single groups.
-    // please note; there is not 'inheritance' between groups, if a group
-    // does not have the permission then it falls back to the global permissions.
+    // ... and you can define multiple users to a groups.
+    // please note; there is no 'inheritance' between groups, if a group
+    // does not have the permission set then it falls back to the global permissions.
     users: {
       'YOUR USER ID': 'admin',
-      'FRIENDS USER ID': 'poweruser',
-      'ANOTHER USER ID': 'nogroup', // undefined group, will use to globals.
+      'FRIENDS USER ID': 'admin',
+      'ANOTHER USER ID': 'poweruser',
+      'YET ANOTHER USER ID': 'nogroup', // undefined group, will use global perms.
+    },
     },
   }
 };
