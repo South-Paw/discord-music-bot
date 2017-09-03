@@ -87,9 +87,9 @@ const config = {
         disconnect: true,
       },
     },
-    // ... and you can define multiple users to a groups.
-    // please note; there is no 'inheritance' between groups, if a group
-    // does not have the permission set then it falls back to the global permissions.
+    // ... and you can define multiple users to a group.
+    // note; there is no 'inheritance' between groups, if a group does not
+    // have the permission set then it falls back to the global permissions.
     users: {
       'YOUR USER ID': 'admin',
       'FRIENDS USER ID': 'admin',
