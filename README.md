@@ -18,10 +18,18 @@ If you do get this running, use `!help` to get a list of commands.
 const MusicBot = require('./src/index.js');
 
 const config = {
-  // these 3 are always required
+  // these 3 are always required.
   token: 'YOUR DISCORD TOKEN',
   serverId: 'YOUR SERVER ID',
   textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
+
+  // permissions is technically optional, but if you want to access to all
+  // permissions you'll need to at the very least make yourself an admin.
+  permissions: {
+    users: {
+      'YOUR USER ID': 'admin',
+    },
+  }
 };
 
 const musicBot = new MusicBot(config);
@@ -35,24 +43,59 @@ musicBot.run();
 const MusicBot = require('./src/index.js');
 
 const config = {
-  // these 3 are always required
+  // these 3 are always required.
   token: 'YOUR DISCORD TOKEN',
   serverId: 'YOUR SERVER ID',
   textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
-  // override any default settings
+
+  // override any default settings.
+  // see `src/config/settings.js` for an idea of structure here.
   settings: {
     commandPrefix: '~',
   },
-  // customize the replies you receive (see `src/config/replies.js` for an idea of structure here).
+
+  // customize the replies you receive.
+  // see `src/config/replies.js` for an idea of structure here.
   replies: {
     general: {
       unknownCommand: 'Looks like I don\'t know that one!',
     },
   },
-  // customize log messages... I dunno why you'd want to do it, but I've allowed for it all the same.
+
+  // customize log messages... I dunno why you'd want to do it, but I've
+  // allowed for it all the same.
+  // see `src/config/logging.js` for an idea of structure here.
   logging: {
-    connected: 'I\'m awesome and ready to bang baby!',
+    connected: 'Bot started and connected.',
   },
+
+  // set up custom user permission groups and assign users to them.
+  permissions: {
+    groups: {
+      // if you provide an already existing group, it will override that
+      // groups default permissions.
+      admin: {
+        disconnect: true,
+        setavatar: true,
+        setusername: true,
+      },
+
+      // you can define new groups and add permissions to them. All groups
+      // will still inherit the global permissions though so if you want to
+      // restrict a group down you'll need to turn perms off.
+      poweruser: {
+        disconnect: true,
+      },
+    },
+    // you can of course define multiple users to single groups.
+    // please note; there is not 'inheritance' between groups, if a group
+    // does not have the permission then it falls back to the global permissions.
+    users: {
+      'YOUR USER ID': 'admin',
+      'FRIENDS USER ID': 'poweruser',
+      'ANOTHER USER ID': 'nogroup', // undefined group, will use to globals.
+    },
+  }
 };
 
 const musicBot = new MusicBot(config);

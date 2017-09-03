@@ -26,6 +26,7 @@ const info = {
   aliases: ['setusername'],
   usage: 'setusername <new username>',
   description: 'Set the bot\'s username.',
+  permission: 'setusername',
 };
 
 module.exports = {

@@ -29,6 +29,7 @@ const info = {
   aliases: ['setavatar'],
   usage: 'setavatar <image url>',
   description: 'Set the bot\'s avatar to the given url (overrides the previous image).',
+  permission: 'setavatar',
 };
 
 module.exports = {

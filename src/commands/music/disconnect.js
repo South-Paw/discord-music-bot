@@ -39,6 +39,7 @@ const info = {
   aliases: ['disconnect', 'd'],
   usage: 'disconnect',
   description: 'Disconnects the bot from it\'s current voice channel.',
+  permission: 'disconnect',
 };
 
 module.exports = {

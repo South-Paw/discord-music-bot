@@ -1,5 +1,3 @@
-const format = require('string-format');
-
 const commandGroup = 'summonCommand';
 
 /**
@@ -28,6 +26,7 @@ const info = {
   aliases: ['summon', 's'],
   usage: 'summon',
   description: 'Summons the bot to your current voice channel.',
+  permission: 'summon',
 };
 
 module.exports = {

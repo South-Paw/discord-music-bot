@@ -5,6 +5,8 @@ module.exports = {
   general: {
     // reply
     unknownCommand: 'Hmmm. I couldn\'t find that command... did you mistype it?',
+    // reply
+    noPermission: 'It would seem that you don\'t have permission for that command. :fearful:',
     // message | @user | help command
     mentionedMessage: 'Hey {}, you should try `{}` for a list of commands. :thumbsup:',
   },

@@ -22,6 +22,7 @@ const format = require('string-format');
 const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');
 const defaultSettings = require('./config/settings.js');
+const defaultPermissions = require('./config/permissions.js');
 
 const commands = require('./commands/index.js');
 
@@ -53,6 +54,10 @@ class MusicBot {
     // Load default settings and any user defined settings.
     this.defaultSettings = defaultSettings;
     this.settings = userConfig.settings;
+
+    // Load default permissions and any user defined ones.
+    this.defaultPermissions = defaultPermissions;
+    this.permissions = userConfig.permissions;
 
     // Load bot commands.
     this.commands = commands;
@@ -124,6 +129,68 @@ class MusicBot {
   }
 
   /**
+   * Gets the name of the permission group for a given user id.
+   *
+   * @param  {string} userId - The user id to find the group of.
+   * @return {string|bool}   - If a groupId is assigned, then it'll be that. If none was found,
+   *                           then it'll be false.
+   */
+  getPermissionGroup(userId) {
+    return (
+      (this.permissions && this.permissions.users && this.permissions.users[userId] != null)
+        ? this.permissions.users[userId]
+        : false
+    );
+  }
+
+  /**
+   * Retrieves the permissions object for the given groupId.
+   *
+   * Will check user defined groups first and then fall back onto default groups if they exist.
+   * If the groupId was false or not found in either the user defined or default groups then the
+   * global permissions object will be returned.
+   *
+   * @param  {string} user    - The user object that we are getting permissions group for.
+   * @param  {string} groupId - The groupId to find the permissions for.
+   * @return {object}         - A object of permissions for the groupId.
+   */
+  getGroupPermissions(user, groupId) {
+    const globalPermissions = this.defaultPermissions.global;
+
+    if (this.permissions && this.permissions.groups && this.permissions.groups[groupId] != null) {
+      return Object.assign(globalPermissions, this.permissions.groups[groupId]);
+    }
+
+    if (this.defaultPermissions.groups[groupId] != null) {
+      return Object.assign(globalPermissions, this.defaultPermissions.groups[groupId]);
+    }
+
+    if (!groupId) {
+      console.log(format(this.getLogMsg('noPermissionGroup'), user.user.username, user.id));
+    } else {
+      console.log(format(this.getLogMsg('unknownPermissionGroup'), user.user.username, user.id, groupId));
+    }
+
+    return globalPermissions;
+  }
+
+  /**
+   * Check that a user has permission to run the command.
+   *
+   * @param  {object} user    - The object of the user who invoked the command.
+   * @param  {object} command - The object of the command the user is attempting to invoke.
+   * @return {bool}           - True if the user has permission to run it or false if not.
+   */
+  checkPermissions(user, command) {
+    const userGroup = this.getPermissionGroup(user.id);
+    const groupPermissions = this.getGroupPermissions(user, userGroup);
+
+    const commandPerm = command.info.permission;
+
+    return (groupPermissions[commandPerm]);
+  }
+
+  /**
    * Given a string for a command (with the commandPrefix removed), checks each command's aliases
    * to find a matching command and returns it.
    *
@@ -155,11 +222,28 @@ class MusicBot {
     const command = this.findCommand(params[0]);
     const args = params.slice(1);
 
+    let commandResult = '';
+
     if (command === false) {
       message.reply(this.getReplyMsg(commandGroup, 'unknownCommand'));
-    } else {
+      commandResult += 'Unknown Command';
+    } else if (this.checkPermissions(message.member, command)) {
       command.run(this, message, args);
+      commandResult += 'Running Command';
+    } else {
+      message.reply(this.getReplyMsg(commandGroup, 'noPermission'));
+      commandResult += 'No Permission';
     }
+
+    const userGroup = this.getPermissionGroup(message.member.id);
+
+    console.log(format(
+      this.getLogMsg('onCommand'),
+      message.member.user.username,
+      message.member.id,
+      (!userGroup ? 'global' : userGroup),
+      message.content,
+      commandResult));
 
     // TODO: clean up old messages - add timeout on the message and delete after an amount of time?
   }

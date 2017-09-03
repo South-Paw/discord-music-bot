@@ -89,6 +89,7 @@ const info = {
   aliases: ['help', 'h'],
   usage: 'help [command alias]',
   description: 'Get a list of all commands or a single command, with it\'s usage and description.',
+  permission: 'help',
 };
 
 module.exports = {
