@@ -32,10 +32,15 @@ class MusicBot {
   /**
    * MusicBot constructor.
    *
-   * @param {object} userConfig - A user config with at least a `token`, `serverId` and
-   *                             `textChannelId` so that the bot can connect. `settings` and
-   *                             `messages` objects are optional and the bot will fall back to the
-   *                             defaults if they are not provided.
+   * @param {object} userConfig               - A user config with at least the `token`, `serverId`
+   *                                            and `textChannelId` provided.
+   * @param {string} userConfig.token         - Your applications unique discord token.
+   * @param {string} userConfig.serverId      - The server id the bot should connect to.
+   * @param {string} userConfig.textChannelId - The text channel id the bot will take commands from.
+   * @param {object} [userConfig.logging]     - Any user defined log messages to override defaults.
+   * @param {object} [userConfig.replies]     - Any user defined replies to override defaults.
+   * @param {object} [userConfig.settings]    - Any user defined settings to override defaults.
+   * @param {object} [userConfig.permissions] - Any user defined permissions to override defaults.
    */
   constructor(userConfig) {
     // Required user config items to setup the bot.

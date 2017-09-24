@@ -58,7 +58,7 @@ function infoToText(preifx, info) {
  *
  * @param {object} musicbot - The musicbot object.
  * @param {object} msg      - The message object that called the command.
- * @param {array}  args     - List of arugments
+ * @param {array}  args     - List of arugments.
  */
 const run = function run(musicbot, msg, args) { // eslint-disable-line
   const commandPrefix = musicbot.getSetting('commandPrefix');

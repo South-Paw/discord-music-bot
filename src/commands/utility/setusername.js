@@ -7,7 +7,7 @@ const commandGroup = 'setUsernameCommand';
  *
  * @param {object} musicbot - The musicbot.
  * @param {object} msg      - The message object that called the command.
- * @param {array}  args     - List of arugments
+ * @param {array}  args     - List of arugments.
  */
 const run = function run(musicbot, msg, args) {
   if (args != null && args.length >= 1) {

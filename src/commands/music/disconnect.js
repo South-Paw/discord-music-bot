@@ -7,7 +7,7 @@ const commandGroup = 'disconnectCommand';
  *
  * @param {object} musicbot - The musicbot.
  * @param {object} msg      - The message object that called the command.
- * @param {array}  args     - List of arugments
+ * @param {array}  args     - List of arugments.
  */
 const run = function run(musicbot, msg, args) { // eslint-disable-line
   if (musicbot.activeVoiceChannel != null) {
