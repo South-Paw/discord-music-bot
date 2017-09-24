@@ -96,7 +96,6 @@ const config = {
       'ANOTHER USER ID': 'poweruser',
       'YET ANOTHER USER ID': 'nogroup', // undefined group, will use global perms.
     },
-    },
   }
 };
 

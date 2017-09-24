@@ -95,4 +95,6 @@ const info = {
 module.exports = {
   info,
   run,
+  // exposed for testing only
+  infoToEmbed,
 };

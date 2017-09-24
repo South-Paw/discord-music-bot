@@ -155,7 +155,7 @@ class MusicBot {
    * If the groupId was false or not found in either the user defined or default groups then the
    * global permissions object will be returned.
    *
-   * @param  {string} user    - The user object that we are getting permissions group for.
+   * @param  {object} user    - The user object that we are getting permissions group for.
    * @param  {string} groupId - The groupId to find the permissions for.
    * @return {object}         - A object of permissions for the groupId.
    */
