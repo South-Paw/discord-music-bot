@@ -23,6 +23,15 @@ module.exports = {
     notInVoiceChannel: 'You need to be in a voice channel to summon me!',
   },
 
+  playCommand: {
+    // reply | help command
+    unknownPlayUrl: 'I either don\'t support or couldn\'t understand that URL.',
+    // reply
+    notConnectedToVoice: 'I can\'t play anything when I\'m not connected to a voice channel!',
+    // reply
+    notInSendersChannel: 'You need to summon me to your channel first!',
+  },
+
   disconnectCommand: {
     // reply
     cantLeave: 'I can\'t disconnect if I\'m not connected...',

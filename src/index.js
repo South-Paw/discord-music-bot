@@ -253,6 +253,26 @@ class MusicBot {
     // TODO: clean up old messages - add timeout on the message and delete after an amount of time?
   }
 
+  queueSpotifyPlaylist(user, id) {
+    // TODO
+    console.log(`Spotify playlist: ${id}`);
+  }
+
+  queueSpotifyTrack(id) {
+    // TODO
+    console.log(`Spotify song: ${id}`);
+  }
+
+  queueYoutubePlaylist(id) {
+    // TODO
+    console.log(`Youtube playlist: ${id}`);
+  }
+
+  queueYoutubeVideo(id) {
+    // TODO
+    console.log(`Youtube song: ${id}`);
+  }
+
   /**
    * Entry point for running the MusicBot.
    */
