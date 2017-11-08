@@ -332,17 +332,17 @@ describe('handleCommand()', () => {
     });
 
     describe('if the command is invalid', () => {
-      test('then a reply to the user with an unknown command message is sent', () => {
+      xtest('then a reply to the user with an unknown command message is sent', () => {
         expect(false).toBe(true);
       });
     });
 
     describe('if the command is valid', () => {
-      test('and the given the user has permissions to use it, it is run', () => {
+      xtest('and the given the user has permissions to use it, it is run', () => {
         expect(false).toBe(true);
       });
 
-      test('but the given user does not have permission to use it, then a reply is made with a no permission message', () => {
+      xtest('but the given user does not have permission to use it, then a reply is made with a no permission message', () => {
         expect(false).toBe(true);
       });
     });
@@ -351,7 +351,7 @@ describe('handleCommand()', () => {
 
 describe('run()', () => {
   describe('When the bot is started', () => {
-    test('it checks that a token, serverId and textChannelId were set', () => {
+    xtest('it checks that a token, serverId and textChannelId were set', () => {
       expect(false).toBe(true);
     });
   });
@@ -359,15 +359,15 @@ describe('run()', () => {
 
 describe('onReady()', () => {
   describe('When the bot is started and ready', () => {
-    test('it connects to the given serverId', () => {
+    xtest('it connects to the given serverId', () => {
       expect(false).toBe(true);
     });
 
-    test('it connects to the given textChannelId', () => {
+    xtest('it connects to the given textChannelId', () => {
       expect(false).toBe(true);
     });
 
-    test('it makes a call to clear the set game', () => {
+    xtest('it makes a call to clear the set game', () => {
       expect(false).toBe(true);
     });
   });
@@ -375,19 +375,19 @@ describe('onReady()', () => {
 
 describe('onMessage()', () => {
   describe('When the bot receives a message', () => {
-    test('it doesn\'t reply if it was it\'s own message', () => {
+    xtest('it doesn\'t reply if it was it\'s own message', () => {
       expect(false).toBe(true);
     });
 
-    test('it doesn\'t reply if it wasn\'t in the commands channel', () => {
+    xtest('it doesn\'t reply if it wasn\'t in the commands channel', () => {
       expect(false).toBe(true);
     });
 
-    test('it replies directly to the user if it was mentioned', () => {
+    xtest('it replies directly to the user if it was mentioned', () => {
       expect(false).toBe(true);
     });
 
-    test('it attempts to handle the command if the message begun with the command prefix', () => {
+    xtest('it attempts to handle the command if the message begun with the command prefix', () => {
       expect(false).toBe(true);
     });
   });
@@ -395,7 +395,7 @@ describe('onMessage()', () => {
 
 describe('onDisconnect()', () => {
   describe('When a disconnect happens', () => {
-    test('the bot logs a message to the console with the event', () => {
+    xtest('the bot logs a message to the console with the event', () => {
       expect(false).toBe(true);
     });
   });
