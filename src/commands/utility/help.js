@@ -1,7 +1,9 @@
 const format = require('string-format');
-const RichEmbed = require('discord.js').RichEmbed;
+const { RichEmbed } = require('discord.js');
 
-const commandGroup = 'helpCommand';
+const COMMAND_GROUP = 'helpCommand';
+
+// TODO user who called, check perms and give their commands instead of just all commands
 
 /**
  * Turns a info object into a RichEmbed. Only used for single commands.
@@ -67,7 +69,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     const command = musicbot.findCommand(args[0]);
 
     if (!command) {
-      msg.reply(format(musicbot.getReplyMsg(commandGroup, 'unknown'), `${commandPrefix}help`));
+      msg.reply(format(musicbot.getReplyMsg(COMMAND_GROUP, 'unknown'), `${commandPrefix}help`));
     } else {
       const embed = infoToEmbed(commandPrefix, command.info);
 

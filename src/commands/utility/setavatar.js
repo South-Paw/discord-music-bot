@@ -1,4 +1,4 @@
-const commandGroup = 'setAvatarCommand';
+const COMMAND_GROUP = 'setAvatarCommand';
 
 /**
  * Set avatar command.
@@ -14,13 +14,13 @@ const run = function run(musicbot, msg, args) {
 
   if (args[0].match(urlRegex)) {
     musicbot.bot.user.setAvatar(args[0])
-      .then(() => msg.reply(musicbot.getReplyMsg(commandGroup, 'success')))
+      .then(() => msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'success')))
       .catch((error) => {
-        msg.reply(`${musicbot.getReplyMsg(commandGroup, 'error')}:\n\`\`\`${error}\`\`\``);
+        msg.reply(`${musicbot.getReplyMsg(COMMAND_GROUP, 'error')}:\n\`\`\`${error}\`\`\``);
         // TODO: requires logging when requests fail
       });
   } else {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'invalidUrl'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'invalidUrl'));
   }
 };
 

@@ -2,7 +2,7 @@ const URL = require('url-parse');
 
 const util = require('../../util/util.js');
 
-const commandGroup = 'playCommand';
+const COMMAND_GROUP = 'playCommand';
 
 const YOUTUBE = 'youtube';
 const SPOTIFY = 'spotify';
@@ -26,7 +26,7 @@ const handleSpotifyUrl = (musicbot, msg, url) => {
   } else if (path[0] === 'track') {
     musicbot.queueSpotifyTrack(path[1]);
   } else {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'unknownPlayUrl'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'unknownPlayUrl'));
   }
 };
 
@@ -51,12 +51,12 @@ const handleYoutubeUrl = (musicbot, msg, url) => {
  */
 const run = function run(musicbot, msg, args) {
   if (musicbot.activeVoiceChannel == null || musicbot.activeVoiceConnection == null) {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'notConnectedToVoice'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'notConnectedToVoice'));
     return;
   }
 
   if (msg.member.voiceChannel !== musicbot.activeVoiceChannel) {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'notInSendersChannel'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'notInSendersChannel'));
     return;
   }
 
@@ -70,7 +70,7 @@ const run = function run(musicbot, msg, args) {
       handleYoutubeUrl(musicbot, msg, inputUrl);
       break;
     default:
-      msg.reply(musicbot.getReplyMsg(commandGroup, 'unknownPlayUrl'));
+      msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'unknownPlayUrl'));
   }
 };
 

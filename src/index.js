@@ -26,7 +26,7 @@ const defaultPermissions = require('./config/permissions.js');
 
 const commands = require('./commands/index.js');
 
-const commandGroup = 'general';
+const COMMAND_GROUP = 'general';
 
 class MusicBot {
   /**
@@ -230,13 +230,13 @@ class MusicBot {
     let commandResult = '';
 
     if (command === false) {
-      message.reply(this.getReplyMsg(commandGroup, 'unknownCommand'));
+      message.reply(this.getReplyMsg(COMMAND_GROUP, 'unknownCommand'));
       commandResult += 'Unknown Command';
     } else if (this.checkPermissions(message.member, command)) {
       command.run(this, message, args);
       commandResult += 'Running Command';
     } else {
-      message.reply(this.getReplyMsg(commandGroup, 'noPermission'));
+      message.reply(this.getReplyMsg(COMMAND_GROUP, 'noPermission'));
       commandResult += 'No Permission';
     }
 
@@ -314,7 +314,7 @@ class MusicBot {
     if (isNotOwnMessage) {
       if (isInCommandsChannel) {
         if (message.isMentioned(this.bot.user)) {
-          message.channel.send(format(this.getReplyMsg(commandGroup, 'mentionedMessage'), message.member.toString(), `${this.getSetting('commandPrefix')}help`));
+          message.channel.send(format(this.getReplyMsg(COMMAND_GROUP, 'mentionedMessage'), message.member.toString(), `${this.getSetting('commandPrefix')}help`));
         } else if (message.content[0] === this.getSetting('commandPrefix')) {
           this.handleCommand(message);
         }

@@ -1,4 +1,4 @@
-const commandGroup = 'disconnectCommand';
+const COMMAND_GROUP = 'disconnectCommand';
 
 /**
  * Disconnect command.
@@ -29,7 +29,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     if (currentVoiceChannel != null) {
       currentVoiceChannel.leave();
     } else {
-      msg.reply(musicbot.getReplyMsg(commandGroup, 'cantLeave'));
+      msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'cantLeave'));
     }
   }
 };

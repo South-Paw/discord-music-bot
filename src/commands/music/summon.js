@@ -1,4 +1,4 @@
-const commandGroup = 'summonCommand';
+const COMMAND_GROUP = 'summonCommand';
 
 /**
  * Summon command.
@@ -15,9 +15,9 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
   if (msg.member.voiceChannel != null) {
     callersChannel.join()
       .then(connection => musicbot.setActiveVoiceConnection(callersChannel, connection))
-      .catch(error => msg.reply(`${musicbot.getReplyMsg(commandGroup, 'couldntConnect')}:\n\`\`\`${error.message}\`\`\``));
+      .catch(error => msg.reply(`${musicbot.getReplyMsg(COMMAND_GROUP, 'couldntConnect')}:\n\`\`\`${error.message}\`\`\``));
   } else {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'notInVoiceChannel'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'notInVoiceChannel'));
   }
 };
 

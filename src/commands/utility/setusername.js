@@ -1,4 +1,4 @@
-const commandGroup = 'setUsernameCommand';
+const COMMAND_GROUP = 'setUsernameCommand';
 
 /**
  * Set username command.
@@ -12,12 +12,12 @@ const commandGroup = 'setUsernameCommand';
 const run = function run(musicbot, msg, args) {
   if (args != null && args.length >= 1) {
     musicbot.bot.user.setUsername(args.join(' '))
-      .then(() => msg.reply(musicbot.getReplyMsg(commandGroup, 'success')))
+      .then(() => msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'success')))
       .catch((error) => {
-        msg.reply(`${musicbot.getReplyMsg(commandGroup, 'error')}:\n\`\`\`${error}\`\`\``);
+        msg.reply(`${musicbot.getReplyMsg(COMMAND_GROUP, 'error')}:\n\`\`\`${error}\`\`\``);
       });
   } else {
-    msg.reply(musicbot.getReplyMsg(commandGroup, 'invalidUsername'));
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'invalidUsername'));
   }
 };
 
