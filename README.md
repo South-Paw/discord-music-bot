@@ -1,13 +1,22 @@
-# discord-music-bot
+<div style="text-align: center">
+  <h1>Discord Music Bot</h1>
+  <p>A self-hosted Node.js music bot for Discord servers.</p>
+  <p>
+    <a href="https://nodei.co/npm/discord-musicbot/"><img src="https://nodei.co/npm/discord-musicbot.png" alt="discord-musicbot on npm" /></a>
+  </p>
+  <p>
+    <a href="https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm"><img src="https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg" alt="bitHound Dependencies" /></a>
+    <a href="https://travis-ci.org/South-Paw/discord-music-bot"><img src="https://img.shields.io/travis/South-Paw/discord-music-bot.svg" alt="travis-ci Build Status" /></a>
+    <a href="https://coveralls.io/github/South-Paw/discord-music-bot"><img src="https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg" alt="coveralls Status" /></a>
+  </p>
+</div>
 
-[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm) [![Build Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot) [![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
+---
 
-A self-hosted Node.js music bot for Discord servers.
-
-**This is still very much a work-in-progress.**
+**Note: This is still very much a work-in-progress.**
 
 * Documentation will be added when there's something a bit more tangible to use.
-* A release will be tagged when it's a bit more fleshed out.
+* A `v1.0.0` release will be tagged when it's a bit more completed.
 
 Until then, watch this space and let me know if there's anything I should consider building into it.
 
@@ -18,7 +27,7 @@ If you do get this running, use `!help` to get a list of commands.
 ## Basic
 
 ```js
-const MusicBot = require('./src/index.js');
+const MusicBot = require('discord-musicbot');
 
 const config = {
   // these 3 are always required.
@@ -43,7 +52,7 @@ musicBot.run();
 ## Advanced
 
 ```js
-const MusicBot = require('./src/index.js');
+const MusicBot = require('discord-musicbot');
 
 const config = {
   // these 3 are always required.
@@ -123,4 +132,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-

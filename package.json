@@ -1,8 +1,14 @@
 {
-  "name": "@south-paw/discord-music-bot",
-  "version": "1.0.0",
+  "name": "discord-musicbot",
+  "version": "0.1.2",
   "description": "A self-hosted Node.js music bot for Discord servers.",
-  "keywords": [],
+  "keywords": [
+    "discord",
+    "bot",
+    "music",
+    "musicbot",
+    "radio"
+  ],
   "homepage": "https://github.com/South-Paw/discord-music-bot",
   "bugs": {
     "url": "https://github.com/South-Paw/discord-music-bot/issues",
@@ -14,6 +20,9 @@
     "email": "hello@southpaw.co.nz",
     "url": "http://southpaw.co.nz/"
   },
+  "files": [
+    "src"
+  ],
   "main": "src/index.js",
   "repository": {
     "type": "git",
