@@ -1,6 +1,6 @@
 # discord-music-bot
 
-[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm) [![Build Status](https://travis-ci.org/South-Paw/discord-music-bot.svg?branch=master)](https://travis-ci.org/South-Paw/discord-music-bot)
+[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm) [![Build Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot) [![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
 
 A self-hosted Node.js music bot for Discord servers.
 
