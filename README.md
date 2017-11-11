@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
   <h1>Discord Music Bot</h1>
   <p>A self-hosted Node.js music bot for Discord servers.</p>
   <p>
@@ -26,6 +26,10 @@ If you do get this running, use `!help` to get a list of commands.
 
 ## Basic
 
+Install: `npm i discord-musicbot`
+
+Create a file called `run.js` and place the following in with your variables.
+
 ```js
 const MusicBot = require('discord-musicbot');
 
@@ -48,6 +52,8 @@ const musicBot = new MusicBot(config);
 
 musicBot.run();
 ```
+
+Once done, start the bot with with `node run.js`.
 
 ## Advanced
 
