@@ -1,6 +1,6 @@
 # discord-music-bot
 
-[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm)
+[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm) [![Build Status](https://travis-ci.org/South-Paw/discord-music-bot.svg?branch=master)](https://travis-ci.org/South-Paw/discord-music-bot)
 
 [![Build Status](https://travis-ci.org/South-Paw/discord-music-bot.svg?branch=master)](https://travis-ci.org/South-Paw/discord-music-bot)
 
