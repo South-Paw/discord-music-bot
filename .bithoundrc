@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "unused-ignores": [
+      "node-opus",
+      "ffmpeg-binaries"
+    ]
+  }
+  "critics": {
+    "lint": {"engine": "eslint"}
+  }
+}
