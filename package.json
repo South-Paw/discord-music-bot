@@ -20,7 +20,7 @@
     "url": "https://github.com/South-Paw/discord-music-bot"
   },
   "scripts": {
-    "lint": "",
+    "lint": "eslint ./src",
     "test": "jest",
     "test/coverage": "jest --coverage"
   },
@@ -29,13 +29,14 @@
     "ffmpeg-binaries": "^3.2.2-3",
     "node-opus": "^0.2.6",
     "string-format": "^0.5.0",
-    "url-parse": "^1.1.9"
+    "url-parse": "^1.1.9",
+    "ytdl-core": "^0.18.1"
   },
   "devDependencies": {
-    "eslint": "^4.5.0",
-    "eslint-config-airbnb-base": "^11.3.2",
-    "eslint-plugin-import": "^2.7.0",
-    "jest": "^21.1.0"
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "jest": "^21.2.1"
   },
   "engines": {
     "node": ">=8.0.0"

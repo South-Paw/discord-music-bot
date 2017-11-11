@@ -17,7 +17,9 @@
 
 /* eslint-disable no-console */
 const Discord = require('discord.js');
+const { RichEmbed } = require('discord.js');
 const format = require('string-format');
+const ytdl = require('ytdl-core');
 
 const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');
@@ -25,6 +27,8 @@ const defaultSettings = require('./config/settings.js');
 const defaultPermissions = require('./config/permissions.js');
 
 const commands = require('./commands/index.js');
+
+const util = require('./util/util.js');
 
 const COMMAND_GROUP = 'general';
 
@@ -70,6 +74,12 @@ class MusicBot {
     this.activeTextChannel = null;
     this.activeVoiceChannel = null;
     this.activeVoiceConnection = null;
+    this.voiceHandler = null;
+
+    this.nowPlaying = null;
+    this.playbackPaused = false;
+    this.playbackStopped = false;
+    this.playlistQueue = [];
 
     this.bot = new Discord.Client({
       autoReconnect: true,
@@ -131,6 +141,43 @@ class MusicBot {
   setActiveVoiceConnection(newVoiceChannel, newVoiceConnection) {
     this.activeVoiceChannel = newVoiceChannel;
     this.activeVoiceConnection = newVoiceConnection;
+  }
+
+  setBotNowPlaying(string) {
+    this.bot.user.setGame(string);
+  }
+
+  resetBotState() {
+    this.setActiveVoiceConnection(null, null);
+    this.voiceHandler = null;
+    this.nowPlaying = null;
+    this.playbackPaused = false;
+    this.playbackStopped = false;
+    this.playlistQueue = [];
+  }
+
+  isQueueEmpty() {
+    return this.playlistQueue.length === 0;
+  }
+
+  isPlaying() {
+    return this.voiceHandler !== null;
+  }
+
+  isPlaybackPaused() {
+    return this.playbackPaused;
+  }
+
+  setPlaybackPaused(bool) {
+    this.playbackPaused = bool;
+  }
+
+  isPlaybackStopped() {
+    return this.playbackStopped;
+  }
+
+  setPlaybackStopped(bool) {
+    this.playbackStopped = bool;
   }
 
   /**
@@ -248,29 +295,108 @@ class MusicBot {
       message.member.id,
       (!userGroup ? 'global' : userGroup),
       message.content,
-      commandResult));
+      commandResult,
+    ));
 
     // TODO: clean up old messages - add timeout on the message and delete after an amount of time?
   }
 
-  queueSpotifyPlaylist(user, id) {
-    // TODO
-    console.log(`Spotify playlist: ${id}`);
+  playNextSong() {
+    if (this.isQueueEmpty()) {
+      this.activeTextChannel.sendMessage(this.getReplyMsg(COMMAND_GROUP, 'queueEmpty'));
+      return;
+    }
+
+    const nextSong = this.playlistQueue[0];
+
+    const stream = ytdl(nextSong.url, { filter: 'audioonly' });
+
+    this.nowPlaying = nextSong;
+
+    this.voiceHandler = this.activeVoiceConnection.playStream(stream);
+    this.voiceHandler.setVolumeDecibels('-20');
+
+    this.setBotNowPlaying(nextSong.title);
+
+    const embed = new RichEmbed()
+      .setAuthor(`Now Playing (via ${nextSong.source})`, nextSong.sourceImage)
+      .setTitle(nextSong.title)
+      .setDescription(`Length: ${util.secondsToTimestamp(nextSong.duration)}`)
+      .setImage(nextSong.image)
+      .setURL(nextSong.url)
+      .setFooter(`Requested by ${nextSong.requestedBy}`);
+
+    this.activeTextChannel.send({ embed });
+
+    this.voiceHandler.on('debug', (info) => {
+      console.log(`Stream Debug: ${info}`);
+    });
+
+    this.voiceHandler.once('error', (error) => {
+      console.log(`Stream Error: ${error}`);
+    });
+
+    this.voiceHandler.once('end', (reason) => {
+      console.log(`Playback ended, reason: ${reason}`);
+
+      this.nowPlaying = null;
+      this.voiceHandler = null;
+
+      this.setBotNowPlaying(null);
+
+      if (!this.isPlaybackStopped() && !this.isQueueEmpty()) {
+        this.playNextSong();
+      }
+    });
+
+    this.playlistQueue.splice(0, 1);
   }
 
-  queueSpotifyTrack(id) {
-    // TODO
-    console.log(`Spotify song: ${id}`);
+  // eslint-disable-next-line class-methods-use-this
+  getYoutubeVideoDetails(requestor, videoId) {
+    return new Promise((resolve) => {
+      ytdl.getInfo(videoId, (error, info) => {
+        resolve({
+          title: info.title,
+          image: info.iurlmaxres,
+          url: info.video_url,
+          duration: info.length_seconds,
+          requestedBy: requestor,
+          source: 'Youtube',
+          sourceImage: 'https://i.imgur.com/nZ5aw5i.png',
+        });
+      });
+    });
   }
 
-  queueYoutubePlaylist(id) {
+  // eslint-disable-next-line
+  queueSpotifyPlaylist(message, playlistOwner, playlistId) {
     // TODO
-    console.log(`Youtube playlist: ${id}`);
+    console.log(`Spotify playlist: ${playlistId} by ${playlistOwner}`);
   }
 
-  queueYoutubeVideo(id) {
+  // eslint-disable-next-line
+  queueSpotifyTrack(message, trackId) {
     // TODO
-    console.log(`Youtube song: ${id}`);
+    console.log(`Spotify song: ${trackId}`);
+  }
+
+  // eslint-disable-next-line
+  queueYoutubePlaylist(message, playlistId) {
+    // TODO
+    console.log(`Youtube playlist: ${playlistId}`);
+  }
+
+  queueYoutubeVideo(message, videoId) {
+    this.getYoutubeVideoDetails(message.author.username, videoId).then((videoDetails) => {
+      this.playlistQueue.push(videoDetails);
+
+      message.reply(format(this.getReplyMsg(COMMAND_GROUP, 'youtubeVideoAdded'), videoDetails.title));
+
+      if (!this.isPlaybackStopped() && !this.isPlaying() && !this.isQueueEmpty()) {
+        this.playNextSong();
+      }
+    });
   }
 
   /**
@@ -302,7 +428,7 @@ class MusicBot {
       throw new Error(format(this.getLogMsg('unableToGetTextChannel'), this.textChannelId));
     }
 
-    this.bot.user.setGame();
+    this.setBotNowPlaying(null);
 
     console.log(this.getLogMsg('connected'));
   }

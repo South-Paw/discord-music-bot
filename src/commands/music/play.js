@@ -22,9 +22,14 @@ const handleSpotifyUrl = (musicbot, msg, url) => {
   const path = url.pathname.split('/');
 
   if (path[2] === 'playlist') {
-    musicbot.queueSpotifyPlaylist(path[1], path[3]);
+    const playlistOwner = path[1];
+    const playlistId = path[3];
+
+    musicbot.queueSpotifyPlaylist(msg, playlistOwner, playlistId);
   } else if (path[0] === 'track') {
-    musicbot.queueSpotifyTrack(path[1]);
+    const trackId = path[1];
+
+    musicbot.queueSpotifyTrack(msg, trackId);
   } else {
     msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'unknownPlayUrl'));
   }
@@ -32,11 +37,13 @@ const handleSpotifyUrl = (musicbot, msg, url) => {
 
 const handleYoutubeUrl = (musicbot, msg, url) => {
   if (url.query.indexOf('list=') !== -1) {
-    const id = util.getYoutubePlaylistId(url.href);
-    musicbot.queueYoutubePlaylist(id);
+    const playlistId = util.getYoutubePlaylistId(url.href);
+
+    musicbot.queueYoutubePlaylist(msg, playlistId);
   } else {
-    const id = util.getYoutubeVideoId(url.href);
-    musicbot.queueYoutubeVideo(id);
+    const videoId = util.getYoutubeVideoId(url.href);
+
+    musicbot.queueYoutubeVideo(msg, videoId);
   }
 };
 

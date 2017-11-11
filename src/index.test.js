@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const RichEmbed = require('discord.js').RichEmbed;
+const { RichEmbed } = require('discord.js');
 
 const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');

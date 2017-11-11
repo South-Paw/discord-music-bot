@@ -1,9 +1,9 @@
-const COMMAND_GROUP = 'disconnectCommand';
+const COMMAND_GROUP = 'pauseCommand';
 
 /**
- * Disconnect command.
+ * Pause command.
  *
- * Disconnects the music bot from it's current voice channel.
+ * Pauses any currently playing song.
  *
  * @param {object} musicbot - The musicbot.
  * @param {object} msg      - The message object that called the command.
@@ -20,16 +20,22 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     return;
   }
 
-  musicbot.activeVoiceChannel.leave();
-  musicbot.resetBotState();
+  if (musicbot.isPlaying() && !musicbot.isPlaybackPaused()) {
+    musicbot.voiceHandler.pause();
+    musicbot.setPlaybackPaused(true);
+    musicbot.setBotNowPlaying(`${musicbot.nowPlaying.title} (Paused)`);
+    msg.reply('Pausing!');
+  } else {
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'notPlaying'));
+  }
 };
 
 const info = {
-  name: 'Disconnect',
-  aliases: ['disconnect', 'd'],
-  usage: 'disconnect',
-  description: 'Disconnects the bot from it\'s current voice channel.',
-  permission: 'disconnect',
+  name: 'Pause',
+  aliases: ['pause'],
+  usage: 'pause',
+  description: 'Pauses any currently playing song.',
+  permission: 'pause',
 };
 
 module.exports = {

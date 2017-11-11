@@ -1,3 +1,21 @@
+const secondsToTimestamp = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  let mins = `0${Math.floor((seconds % 3600) / 60)}`;
+  let secs = `0${Math.floor((seconds % 60))}`;
+
+  mins = mins.substr(mins.length - 2);
+  secs = secs.substr(secs.length - 2);
+
+  // eslint-disable-next-line
+  if (!isNaN(secs)) {
+    if (hours) {
+      return `${hours}:${mins}:${secs}`;
+    }
+    return `${mins}:${secs}`;
+  }
+  return '00:00';
+};
+
 const getYoutubeVideoId = (url) => {
   const patterns = [
     /youtu\.be\/([^#&?]{11})/, // youtu.be/<id>
@@ -39,6 +57,7 @@ const getYoutubePlaylistId = (url) => {
 };
 
 module.exports = {
+  secondsToTimestamp,
   getYoutubeVideoId,
   getYoutubePlaylistId,
 };
