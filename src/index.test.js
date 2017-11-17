@@ -152,9 +152,13 @@ describe('getGroupPermissions()', () => {
 
       const bot = new MusicBot(config);
 
-      const expected = Object.assign(defaultPermissions.global, config.permissions.groups[groupId]);
+      const expected = Object.assign(
+        {},
+        defaultPermissions.global,
+        config.permissions.groups[groupId],
+      );
 
-      expect(bot.getGroupPermissions(user, groupId)).toBe(expected);
+      expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
     });
 
     test('it will return the global permissions for an undefined group if no custom ones were supplied', () => {
@@ -169,9 +173,13 @@ describe('getGroupPermissions()', () => {
 
       const bot = new MusicBot({});
 
-      const expected = Object.assign(defaultPermissions.global, defaultPermissions.groups[groupId]);
+      const expected = Object.assign(
+        {},
+        defaultPermissions.global,
+        defaultPermissions.groups[groupId],
+      );
 
-      expect(bot.getGroupPermissions(user, groupId)).toBe(expected);
+      expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
     });
 
     test('it will return the default admin permissions if the user was set to the default admin group', () => {
@@ -186,9 +194,13 @@ describe('getGroupPermissions()', () => {
 
       const bot = new MusicBot({});
 
-      const expected = Object.assign(defaultPermissions.global, defaultPermissions.groups[groupId]);
+      const expected = Object.assign(
+        {},
+        defaultPermissions.global,
+        defaultPermissions.groups[groupId],
+      );
 
-      expect(bot.getGroupPermissions(user, groupId)).toBe(expected);
+      expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
     });
 
     test('it will return the default global permissions if the user was not set to any groups', () => {

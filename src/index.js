@@ -210,11 +210,11 @@ class MusicBot {
     const globalPermissions = this.defaultPermissions.global;
 
     if (this.permissions && this.permissions.groups && this.permissions.groups[groupId] != null) {
-      return Object.assign(globalPermissions, this.permissions.groups[groupId]);
+      return Object.assign({}, globalPermissions, this.permissions.groups[groupId]);
     }
 
     if (this.defaultPermissions.groups[groupId] != null) {
-      return Object.assign(globalPermissions, this.defaultPermissions.groups[groupId]);
+      return Object.assign({}, globalPermissions, this.defaultPermissions.groups[groupId]);
     }
 
     if (!groupId) {
