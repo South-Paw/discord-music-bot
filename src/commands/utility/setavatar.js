@@ -12,7 +12,7 @@ const COMMAND_GROUP = 'setAvatarCommand';
 const run = function run(musicbot, msg, args) {
   const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
 
-  if (args[0].match(urlRegex)) {
+  if (args[0] && args[0].match(urlRegex)) {
     musicbot.bot.user.setAvatar(args[0])
       .then(() => msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'success')))
       .catch((error) => {

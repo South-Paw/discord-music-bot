@@ -3,8 +3,6 @@ const { RichEmbed } = require('discord.js');
 
 const COMMAND_GROUP = 'helpCommand';
 
-// TODO user who called, check perms and give their commands instead of just all commands
-
 /**
  * Turns a info object into a RichEmbed. Only used for single commands.
  *
@@ -58,6 +56,9 @@ function infoToText(preifx, info) {
  * Creates a rich embed for each command, mentions the user who issued the command and then sends
  * the list of rich embeds back to the user.
  *
+ * TODO: user who called command, check if they have perms and give their group's commands instead
+ * of just all commands?
+ *
  * @param {object} musicbot - The musicbot object.
  * @param {object} msg      - The message object that called the command.
  * @param {array}  args     - List of arugments.
@@ -97,6 +98,6 @@ const info = {
 module.exports = {
   info,
   run,
-  // exposed for testing only
+  // Exposed for testing only.
   infoToEmbed,
 };

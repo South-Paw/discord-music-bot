@@ -1,5 +1,4 @@
 const URL = require('url-parse');
-
 const util = require('../../util/util.js');
 
 const COMMAND_GROUP = 'playCommand';
@@ -8,6 +7,12 @@ const YOUTUBE = 'youtube';
 const SPOTIFY = 'spotify';
 const UNKNOWN = 'unknown';
 
+/**
+ * Figures out what supported provider the URL is for.
+ *
+ * @param  {string} url - The given url.
+ * @return {string}     - The name of the provider as a string or 'unknown' if none.
+ */
 const getUrlProvider = (url) => {
   if (url.hostname.indexOf('spotify') !== -1) {
     return SPOTIFY;
@@ -18,6 +23,14 @@ const getUrlProvider = (url) => {
   return UNKNOWN;
 };
 
+/**
+ * Handles a spotify url. Decides if it's a playlist or not, then breaks it up and grabs the
+ * important parts.
+ *
+ * @param {object} musicbot - The musicbot.
+ * @param {object} msg      - The message object that called the command.
+ * @param {string} url      - The given spotify url.
+ */
 const handleSpotifyUrl = (musicbot, msg, url) => {
   const path = url.pathname.split('/');
 
@@ -35,6 +48,14 @@ const handleSpotifyUrl = (musicbot, msg, url) => {
   }
 };
 
+/**
+ * Handles a youtube url. Decides if it's a playlist or not, then breaks it up and grabs the
+ * important parts.
+ *
+ * @param {object} musicbot - The musicbot.
+ * @param {object} msg      - The message object that called the command.
+ * @param {string} url      - The given youtube url.
+ */
 const handleYoutubeUrl = (musicbot, msg, url) => {
   if (url.query.indexOf('list=') !== -1) {
     const playlistId = util.getYoutubePlaylistId(url.href);
