@@ -20,14 +20,11 @@ const Discord = require('discord.js');
 const { RichEmbed } = require('discord.js');
 const format = require('string-format');
 const ytdl = require('ytdl-core');
-
+const commands = require('./commands/index.js');
 const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');
 const defaultSettings = require('./config/settings.js');
 const defaultPermissions = require('./config/permissions.js');
-
-const commands = require('./commands/index.js');
-
 const util = require('./util/util.js');
 
 const COMMAND_GROUP = 'general';
@@ -143,10 +140,9 @@ class MusicBot {
     this.activeVoiceConnection = newVoiceConnection;
   }
 
-  setBotNowPlaying(string) {
-    this.bot.user.setGame(string);
-  }
-
+  /**
+   * Set all of the bot's state variables back to defaults.
+   */
   resetBotState() {
     this.setActiveVoiceConnection(null, null);
     this.voiceHandler = null;
@@ -156,36 +152,75 @@ class MusicBot {
     this.playlistQueue = [];
   }
 
+  /**
+   * Set the bot's 'Now Playing' state.
+   *
+   * @param {string} nowPlaying - The string to set the 'Now Playing' to, pass `null` to clear.
+   */
+  setBotNowPlaying(nowPlaying) {
+    this.bot.user.setGame(nowPlaying);
+  }
+
+  /**
+   * Return if the playlist queue has any items in it.
+   *
+   * @return {boolean} - If the queue contains one or more items.
+   */
   isQueueEmpty() {
     return this.playlistQueue.length === 0;
   }
 
-  isPlaying() {
+  /**
+   * Return if the voicer handler is set.
+   *
+   * @return {boolean} - If the voiceHandler is set, then true.
+   */
+  isVoiceHandlerSet() {
     return this.voiceHandler !== null;
   }
 
+  /**
+   * Return if the playback has been paused.
+   *
+   * @return {boolean} - If the playback has been paused or not.
+   */
   isPlaybackPaused() {
     return this.playbackPaused;
   }
 
-  setPlaybackPaused(bool) {
-    this.playbackPaused = bool;
+  /**
+   * Set the playback's pause state. True for paused, false for not.
+   *
+   * @param {boolean} state - If paused (true) or not (false).
+   */
+  setPlaybackPaused(state) {
+    this.playbackPaused = state;
   }
 
+  /**
+   * Return if the playback has been stopped.
+   *
+   * @return {boolean} - If the playback has been stopped or not.
+   */
   isPlaybackStopped() {
     return this.playbackStopped;
   }
 
-  setPlaybackStopped(bool) {
-    this.playbackStopped = bool;
+  /**
+   * Set the playback's stopped state. True for stopped, false for not.
+   *
+   * @param {boolean} state - If stopped (true) or not (false).
+   */
+  setPlaybackStopped(state) {
+    this.playbackStopped = state;
   }
 
   /**
    * Gets the name of the permission group for a given user id.
    *
-   * @param  {string} userId - The user id to find the group of.
-   * @return {string|bool}   - If a groupId is assigned, then it'll be that. If none was found,
-   *                           then it'll be false.
+   * @param  {string} userId  - The user id to find the group of.
+   * @return {string|boolean} - If a groupId is assigned, then it'll return that value otherwose if
+   *                            none was found it'll be false.
    */
   getPermissionGroup(userId) {
     return (
@@ -231,7 +266,7 @@ class MusicBot {
    *
    * @param  {object} user    - The object of the user who invoked the command.
    * @param  {object} command - The object of the command the user is attempting to invoke.
-   * @return {bool}           - True if the user has permission to run it or false if not.
+   * @return {boolean}        - True if the user has permission to run it or false if not.
    */
   checkPermissions(user, command) {
     const userGroup = this.getPermissionGroup(user.id);
@@ -267,7 +302,7 @@ class MusicBot {
    * Given a message that contains a command (as indicated by the first character of the message
    * being the commandPrefix), find the command and execute it or respond to the user.
    *
-   * @param  {object} message - A discord.js message object.
+   * @param {object} message - A discord.js message object.
    */
   handleCommand(message) {
     const params = message.content.slice(1).split(' ');
@@ -297,10 +332,11 @@ class MusicBot {
       message.content,
       commandResult,
     ));
-
-    // TODO: clean up old messages - add timeout on the message and delete after an amount of time?
   }
 
+  /**
+   * Trigger the bot to start playing the next song from the queue if there is one.
+   */
   playNextSong() {
     if (this.isQueueEmpty()) {
       this.activeTextChannel.sendMessage(this.getReplyMsg(COMMAND_GROUP, 'queueEmpty'));
@@ -352,68 +388,58 @@ class MusicBot {
     this.playlistQueue.splice(0, 1);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getYoutubeVideoDetails(requestor, videoId) {
-    return new Promise((resolve) => {
-      ytdl.getInfo(videoId, (error, info) => {
-        resolve({
-          title: info.title,
-          image: info.iurlmaxres,
-          url: info.video_url,
-          duration: info.length_seconds,
-          requestedBy: requestor,
-          source: 'Youtube',
-          sourceImage: 'https://i.imgur.com/nZ5aw5i.png',
-        });
-      });
-    });
-  }
-
-  // eslint-disable-next-line
-  queueSpotifyPlaylist(message, playlistOwner, playlistId) {
-    // TODO
+  /**
+   * TODO: Queue all songs on a given Spotify playlist.
+   *
+   * @param {object} message       - The original message object.
+   * @param {string} playlistOwner - The playlist's owner (username from url).
+   * @param {string} playlistId    - The playlist's Spotify id.
+   */
+  queueSpotifyPlaylist(message, playlistOwner, playlistId) { // eslint-disable-line
     console.log(`Spotify playlist: ${playlistId} by ${playlistOwner}`);
   }
 
-  // eslint-disable-next-line
-  queueSpotifyTrack(message, trackId) {
-    // TODO
+  /**
+   * TODO: Queue a single Spotify track.
+   *
+   * @param {object} message - The original message object.
+   * @param {string} trackId - The Spotify track's id
+   */
+  queueSpotifyTrack(message, trackId) { // eslint-disable-line
     console.log(`Spotify song: ${trackId}`);
   }
 
-  // eslint-disable-next-line
-  queueYoutubePlaylist(message, playlistId) {
-    // TODO
+  /**
+   * TODO: Queue all videos on a given Youtube playlist.
+   *
+   * @param {object} message    - The original message object.
+   * @param {string} playlistId - The Youtube playlist id.
+   */
+  queueYoutubePlaylist(message, playlistId) { // eslint-disable-line
     console.log(`Youtube playlist: ${playlistId}`);
   }
 
+  /**
+   * Queue a single Youtube video.
+   *
+   * @param {object} message - The original message object.
+   * @param {string} videoId - The Youtube video id.
+   */
   queueYoutubeVideo(message, videoId) {
-    this.getYoutubeVideoDetails(message.author.username, videoId).then((videoDetails) => {
+    util.getYoutubeVideoDetails(message.author.username, videoId).then((videoDetails) => {
       this.playlistQueue.push(videoDetails);
 
       message.reply(format(this.getReplyMsg(COMMAND_GROUP, 'youtubeVideoAdded'), videoDetails.title));
 
-      if (!this.isPlaybackStopped() && !this.isPlaying() && !this.isQueueEmpty()) {
+      if (!this.isPlaybackStopped() && !this.isVoiceHandlerSet() && !this.isQueueEmpty()) {
         this.playNextSong();
       }
     });
   }
 
   /**
-   * Entry point for running the MusicBot.
+   * Called for the initial set up of the bot after it's connected.
    */
-  run() {
-    this.bot.on('ready', () => this.onReady());
-    this.bot.on('message', message => this.onMessage(message));
-    this.bot.on('disconnect', event => this.onDisconnect(event));
-
-    if (!this.token || !this.serverId || !this.textChannelId) {
-      throw new Error(this.getLogMsg('configMissing'));
-    }
-
-    this.bot.login(this.token);
-  }
-
   onReady() {
     const server = this.bot.guilds.get(this.serverId);
 
@@ -433,6 +459,11 @@ class MusicBot {
     console.log(this.getLogMsg('connected'));
   }
 
+  /**
+   * Called when messages are received by the bot.
+   *
+   * @param {object} message - The received message object.
+   */
   onMessage(message) {
     const isNotOwnMessage = (message.author.id !== this.bot.user.id);
     const isInCommandsChannel = (message.channel.name === this.activeTextChannel.name);
@@ -448,8 +479,28 @@ class MusicBot {
     }
   }
 
+  /**
+   * Called when bot disconnects from Discord.
+   *
+   * @param {object} event - The disconnect event.
+   */
   onDisconnect(event) {
     console.log(format(this.getLogMsg('disconnected'), event.reason, event.code));
+  }
+
+  /**
+   * The point at which all the magic happens from when you start the bot...
+   */
+  run() {
+    this.bot.on('ready', () => this.onReady());
+    this.bot.on('message', message => this.onMessage(message));
+    this.bot.on('disconnect', event => this.onDisconnect(event));
+
+    if (!this.token || !this.serverId || !this.textChannelId) {
+      throw new Error(this.getLogMsg('configMissing'));
+    }
+
+    this.bot.login(this.token);
   }
 }
 

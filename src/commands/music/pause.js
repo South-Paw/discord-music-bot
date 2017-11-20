@@ -20,7 +20,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     return;
   }
 
-  if (musicbot.isPlaying() && !musicbot.isPlaybackPaused()) {
+  if (musicbot.isVoiceHandlerSet() && !musicbot.isPlaybackPaused()) {
     musicbot.voiceHandler.pause();
     musicbot.setPlaybackPaused(true);
     musicbot.setBotNowPlaying(`${musicbot.nowPlaying.title} (Paused)`);

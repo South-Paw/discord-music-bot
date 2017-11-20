@@ -11,13 +11,17 @@ const HELP_COMMAND = require('./utility/help.js');
 const SET_USERNAME_COMMAND = require('./utility/setusername.js');
 const SET_AVATAR_COMMAND = require('./utility/setavatar.js');
 
+// Note: The export order here matters as it defines the command search order and the display of
+// the !help command.
 module.exports = [
+  // Music commands
   SUMMON_COMMAND,
   DISCONNECT_COMMAND,
   PLAY_COMMAND,
   PAUSE_COMMAND,
   RESUME_COMMAND,
   STOP_COMMAND,
+  // Utility commands
   HELP_COMMAND,
   SET_USERNAME_COMMAND,
   SET_AVATAR_COMMAND,
