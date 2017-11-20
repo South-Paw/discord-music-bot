@@ -26,7 +26,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
 
 const info = {
   name: 'Disconnect',
-  aliases: ['disconnect', 'd'],
+  aliases: ['disconnect', 'd', 'leave'],
   usage: 'disconnect',
   description: 'Disconnects the bot from it\'s current voice channel.',
   permission: 'disconnect',

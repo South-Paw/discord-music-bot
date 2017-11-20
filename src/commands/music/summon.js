@@ -23,7 +23,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
 
 const info = {
   name: 'Summon',
-  aliases: ['summon', 's'],
+  aliases: ['summon', 's', 'join'],
   usage: 'summon',
   description: 'Summons the bot to your current voice channel.',
   permission: 'summon',
