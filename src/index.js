@@ -389,7 +389,8 @@ class MusicBot {
   }
 
   /**
-   * TODO: Queue all songs on a given Spotify playlist.
+   * TODO
+   * Queue all songs on a given Spotify playlist.
    *
    * @param {object} message       - The original message object.
    * @param {string} playlistOwner - The playlist's owner (username from url).
@@ -400,7 +401,8 @@ class MusicBot {
   }
 
   /**
-   * TODO: Queue a single Spotify track.
+   * TODO
+   * Queue a single Spotify track.
    *
    * @param {object} message - The original message object.
    * @param {string} trackId - The Spotify track's id
@@ -410,7 +412,8 @@ class MusicBot {
   }
 
   /**
-   * TODO: Queue all videos on a given Youtube playlist.
+   * TODO
+   * Queue all videos on a given Youtube playlist.
    *
    * @param {object} message    - The original message object.
    * @param {string} playlistId - The Youtube playlist id.
