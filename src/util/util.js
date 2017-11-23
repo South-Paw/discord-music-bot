@@ -17,7 +17,7 @@ const secondsToTimestamp = (seconds) => {
   secs = secs.substr(secs.length - 2);
 
   // eslint-disable-next-line
-  if (!isNaN(secs)) {
+  if (!isNaN(seconds)) {
     if (hours) {
       return `${hours}:${mins}:${secs}`;
     }

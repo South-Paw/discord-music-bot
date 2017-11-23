@@ -7,6 +7,10 @@ const {
 
 describe('Util functions', () => {
   describe('secondsToTimestamp()', () => {
+    test('it sensibly handles invalid values', () => {
+      expect(secondsToTimestamp('test')).toBe('00:00');
+    });
+
     test('it sensibly handles negative seconds', () => {
       expect(secondsToTimestamp(-1)).toBe('00:00');
     });
@@ -54,6 +58,10 @@ describe('Util functions', () => {
 
   describe('getYoutubeVideoId()', () => {
     const expectedVideoId = 'bKYwzLAVqhY';
+
+    test('invalid url returns null', () => {
+      expect(getYoutubeVideoId(`http://google.com/?v=${expectedVideoId}`)).toBeNull();
+    });
 
     test('a url with youtu.be', () => {
       expect(getYoutubeVideoId(`http://youtu.be/${expectedVideoId}`)).toBe(expectedVideoId);
@@ -118,6 +126,10 @@ describe('Util functions', () => {
 
   describe('getYoutubePlaylistId()', () => {
     const expectedPlaylistId = 'UULTZddgA_La9H4Ngg99t_QQ';
+
+    test('invalid url returns null', () => {
+      expect(getYoutubePlaylistId(`http://google.com/?list=${expectedPlaylistId}`)).toBeNull();
+    });
 
     test('a url with ?list=', () => {
       expect(getYoutubePlaylistId(`http://www.youtube.com/?list=${expectedPlaylistId}`)).toBe(expectedPlaylistId);
