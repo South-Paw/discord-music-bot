@@ -8,9 +8,10 @@ const ytdl = require('ytdl-core');
  *                            return mm:ss instead.
  */
 const secondsToTimestamp = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  let mins = `0${Math.floor((seconds % 3600) / 60)}`;
-  let secs = `0${Math.floor((seconds % 60))}`;
+  const secondsFloor = seconds > 0 ? seconds : 0;
+  const hours = Math.floor(secondsFloor / 3600);
+  let mins = `0${Math.floor((secondsFloor % 3600) / 60)}`;
+  let secs = `0${Math.floor((secondsFloor % 60))}`;
 
   mins = mins.substr(mins.length - 2);
   secs = secs.substr(secs.length - 2);
