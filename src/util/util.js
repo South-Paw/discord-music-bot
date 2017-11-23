@@ -101,8 +101,8 @@ const getYoutubeVideoId = (url) => {
  */
 const getYoutubePlaylistId = (url) => {
   const patterns = [
-    /\?list=([^#&?]{34})/,
-    /&list=([^#&?]{34})/,
+    /\?list=([^#&?]{24})/,
+    /&list=([^#&?]{24})/,
   ];
 
   if (/youtu\.?be/.test(url)) {
