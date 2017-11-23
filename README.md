@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Discord Music Bot</h1>
-  <p>A self-hosted Node.js music bot for Discord servers.</p>
+  <p>🎧 A music bot for Discord servers, self-hosted and easy to use.</p>
   <p>
     <a href="https://nodei.co/npm/discord-musicbot/"><img src="https://nodei.co/npm/discord-musicbot.png" alt="discord-musicbot on npm" /></a>
   </p>
@@ -13,14 +13,14 @@
 
 ---
 
-**Note: This is still very much a work-in-progress.**
+**Note: This is still very much a work-in-progress and will contain bugs!**
 
 * Documentation will be added when there's something a bit more tangible to use.
 * A `v1.0.0` release will be tagged when it's a bit more completed.
 
 Until then, watch this space and let me know if there's anything I should consider building into it.
 
-If you do get this running, use `!help` to get a list of commands.
+If you get this running, use `!help` to get a list of commands.
 
 # Example usage
 
@@ -28,7 +28,7 @@ If you do get this running, use `!help` to get a list of commands.
 
 Install: `npm i discord-musicbot`
 
-Create a file called `run.js` and place the following in with your variables.
+Create a file called `run.js` and place the following in it (replace variables where applicable).
 
 ```js
 const MusicBot = require('discord-musicbot');
