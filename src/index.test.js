@@ -38,30 +38,27 @@ describe('MusicBot', () => {
 
   describe('getReplyMsg()', () => {
     describe('When a reply message is required', () => {
+      const generalGroup = 'general';
+      const unknownCommand = 'unknownCommand';
+
       test('it can be found for a given group and key', () => {
-        const group = 'general';
-        const key = 'unknownCommand';
         const message = defaultReplies.general.unknownCommand;
         const bot = new MusicBot({});
 
-        expect(bot.getReplyMsg(group, key)).toBe(message);
+        expect(bot.getReplyMsg(generalGroup, unknownCommand)).toBe(message);
       });
 
       test('it can be found for a given group and key the user overrode', () => {
-        const group = 'general';
-        const key = 'unknownCommand';
         const message = 'Custom unknown command message.';
-        const bot = new MusicBot({ replies: { general: { unknownCommand: message } } });
+        const bot = new MusicBot({ replies: { [generalGroup]: { [unknownCommand]: message } } });
 
-        expect(bot.getReplyMsg(group, key)).toBe(message);
+        expect(bot.getReplyMsg(generalGroup, unknownCommand)).toBe(message);
       });
 
       test('it will return undefined when the key is not found in the group', () => {
-        const group = 'general';
-        const key = 'unknown';
         const bot = new MusicBot({});
 
-        expect(bot.getReplyMsg(group, key)).toBe(undefined);
+        expect(bot.getReplyMsg(generalGroup, 'unknown')).toBe(undefined);
       });
     });
   });
@@ -99,9 +96,9 @@ describe('MusicBot', () => {
     });
 
     test('a new voice connection and channel can be set', () => {
+      const bot = new MusicBot({});
       const objectA = { a: 'a' };
       const objectB = { b: 'b' };
-      const bot = new MusicBot({});
 
       bot.setActiveVoiceConnection(objectA, objectB);
 
@@ -110,51 +107,104 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('resetBotState()', () => {
+  describe('resetBotState()', () => {
     test('clears bot state back to default', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+
+      bot.setActiveVoiceConnection({ q: 'w' }, { z: 'x' });
+      bot.voiceHandler = 'voiceHandler';
+      bot.nowPlaying = 'nowPlaying';
+      bot.playbackPaused = true;
+      bot.playbackStopped = true;
+      bot.playlistQueue = ['a', 'b', 'c'];
+
+      bot.resetBotState();
+
+      expect(bot.activeVoiceChannel).toBe(null);
+      expect(bot.activeVoiceConnection).toBe(null);
+      expect(bot.voiceHandler).toBe(null);
+      expect(bot.nowPlaying).toBe(null);
+      expect(bot.playbackPaused).toBe(false);
+      expect(bot.playbackStopped).toBe(false);
+      expect(bot.playlistQueue.length).toBe(0);
     });
   });
 
-  xdescribe('setBotNowPlaying()', () => {
+  describe('setBotNowPlaying()', () => {
     test('the now playing string can be cleared', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      const nowPlaying = null;
+
+      bot.bot.user = {
+        presence: { game: 'hello world!' },
+        setGame: (string) => { bot.bot.user.presence = { game: string }; },
+      };
+
+      bot.setBotNowPlaying(nowPlaying);
+
+      expect(bot.bot.user.presence.game).toBe(nowPlaying);
     });
 
     test('the now playing string is set', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      const nowPlaying = 'test now playing';
+
+      bot.bot.user = {
+        presence: { game: null },
+        setGame: (string) => { bot.bot.user.presence = { game: string }; },
+      };
+
+      bot.setBotNowPlaying(nowPlaying);
+
+      expect(bot.bot.user.presence.game).toBe(nowPlaying);
     });
   });
 
-  xdescribe('isQueueEmpty()', () => {
+  describe('isQueueEmpty()', () => {
     test('returns true after the queue has items added', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      bot.playlistQueue = ['a', 'b', 'c'];
+
+      expect(bot.isQueueEmpty()).toBe(false);
     });
 
     test('returns false if the queue does not have items', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+
+      expect(bot.isQueueEmpty()).toBe(true);
     });
   });
 
-  xdescribe('isVoiceHandlerSet()', () => {
+  describe('isVoiceHandlerSet()', () => {
     test('returns true after the voice handler has been set', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      bot.voiceHandler = 'voiceHandler';
+
+      expect(bot.isVoiceHandlerSet()).toBe(true);
     });
 
     test('returns false if the voice handler has not been set', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+
+      expect(bot.isVoiceHandlerSet()).toBe(false);
     });
   });
 
-  xdescribe('isPlaybackPaused() and setPlaybackPaused()', () => {
+  describe('isPlaybackPaused() and setPlaybackPaused()', () => {
     test('allows the playback paused state to be set with setPlaybackPaused()', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      bot.setPlaybackPaused(true);
+
+      expect(bot.isPlaybackPaused()).toBe(true);
     });
   });
 
-  xdescribe('isPlaybackStopped() and setPlaybackStopped()', () => {
+  describe('isPlaybackStopped() and setPlaybackStopped()', () => {
     test('allows the playback stopped state to be set with setPlaybackStopped()', () => {
-      expect(false).toBe(true);
+      const bot = new MusicBot({});
+      bot.setPlaybackStopped(true);
+
+      expect(bot.isPlaybackStopped()).toBe(true);
     });
   });
 
