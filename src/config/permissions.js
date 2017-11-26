@@ -6,6 +6,7 @@ module.exports = {
     play: true,
     resume: true,
     stop: true,
+    skip: true,
     help: true,
     setavatar: false,
     setusername: false,

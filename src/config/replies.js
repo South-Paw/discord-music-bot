@@ -58,6 +58,13 @@ module.exports = {
     alreadyStopped: 'But I\'ve already stopped playing... :sweat:',
   },
 
+  skipCommand: {
+    // reply
+    skippingSong: 'Skipping song',
+    // reply
+    nothingPlaying: 'I can\'t skip when not playing',
+  },
+
   summonCommand: {
     // reply + error
     couldntConnect: 'I couldn\'t connect to your voice channel',
