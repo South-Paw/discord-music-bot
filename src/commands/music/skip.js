@@ -29,7 +29,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
 };
 
 const info = {
-  name: 'skip',
+  name: 'Skip',
   aliases: ['skip'],
   usage: 'skip',
   description: 'Skips the current song.',
