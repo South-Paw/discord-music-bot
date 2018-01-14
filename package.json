@@ -1,7 +1,7 @@
 {
   "name": "discord-musicbot",
   "version": "0.1.4",
-  "description": "A self-hosted Node.js music bot for Discord servers.",
+  "description": "A music bot for Discord servers, self-hosted and easy to use.",
   "keywords": [
     "discord",
     "bot",

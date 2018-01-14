@@ -1,15 +1,12 @@
-<div align="center">
-  <h1>Discord Music Bot</h1>
-  <p>🎧 A music bot for Discord servers, self-hosted and easy to use.</p>
-  <p>
-    <a href="https://nodei.co/npm/discord-musicbot/"><img src="https://nodei.co/npm/discord-musicbot.png" alt="discord-musicbot on npm" /></a>
-  </p>
-  <p>
-    <a href="https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm"><img src="https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg" alt="bitHound Dependencies" /></a>
-    <a href="https://travis-ci.org/South-Paw/discord-music-bot"><img src="https://img.shields.io/travis/South-Paw/discord-music-bot.svg" alt="travis-ci Build Status" /></a>
-    <a href="https://coveralls.io/github/South-Paw/discord-music-bot"><img src="https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg" alt="coveralls Status" /></a>
-  </p>
-</div>
+# Discord Music Bot
+
+🎧 A music bot for Discord servers, self-hosted and easy to use.
+
+[![discord-musicbot on npm](https://nodei.co/npm/discord-musicbot.png)](https://nodei.co/npm/discord-musicbot/)
+
+[![travis-ci Build Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
+[![coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
+[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm)
 
 ---
 
@@ -22,9 +19,9 @@ Until then, watch this space and let me know if there's anything I should consid
 
 If you get this running, use `!help` to get a list of commands.
 
-# Example usage
+## Example usage
 
-## Basic
+### Basic
 
 Install: `npm i discord-musicbot`
 
@@ -55,7 +52,7 @@ musicBot.run();
 
 Once done, start the bot with with `node run.js`.
 
-## Advanced
+### Advanced
 
 ```js
 const MusicBot = require('discord-musicbot');
@@ -122,7 +119,7 @@ const musicBot = new MusicBot(config);
 musicBot.run();
 ```
 
-# License
+## License
 
 Copyright (C) 2017 Alex Gabites
 

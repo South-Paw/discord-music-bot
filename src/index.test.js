@@ -457,7 +457,7 @@ describe('MusicBot', () => {
           expect(false).toBe(true);
         });
 
-        test('but the given user does not have permission to use it, then a reply is made with a no permission message', () => {
+        test('but the given user does not have permission to use it, then it replies with a no permission message', () => {
           expect(false).toBe(true);
         });
       });
