@@ -67,6 +67,10 @@ module.exports = {
 
   skipCommand: {
     // reply
+    notConnectedToVoice: 'I can\'t skip anything when I\'m not connected to a voice channel!',
+    // reply
+    notInSendersChannel: 'You should really be in my channel before trying to skip anything :neutral_face:',
+    // reply
     skippingSong: 'Skipping song',
     // reply
     nothingPlaying: 'I can\'t skip when not playing',

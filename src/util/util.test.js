@@ -1,8 +1,10 @@
 /* eslint-env jest */
+const { RichEmbed } = require('discord.js');
 const {
   secondsToTimestamp,
   getYoutubeVideoId,
   getYoutubePlaylistId,
+  getNowPlayingEmbed,
 } = require('./util');
 
 describe('Util functions', () => {
@@ -153,6 +155,32 @@ describe('Util functions', () => {
 
     test('a url with &list= with & after', () => {
       expect(getYoutubePlaylistId(`http://www.youtube.com/?v=Qe4s5fYZ49U&list=${expectedPlaylistId}&rel=0`)).toBe(expectedPlaylistId);
+    });
+  });
+
+  describe('getNowPlayingEmbed', () => {
+    const nowPlayingObject = {
+      title: 'title',
+      image: 'image',
+      url: 'url',
+      duration: '123',
+      requestedBy: 'requestedBy',
+      source: 'source',
+      sourceImage: 'sourceImage',
+    };
+
+    test('a valid now playing object creates an embed', () => {
+      const embed = getNowPlayingEmbed(nowPlayingObject);
+
+      expect(embed).toBeInstanceOf(RichEmbed);
+
+      expect(embed.author.name).toBe(`Now Playing (via ${nowPlayingObject.source})`);
+      expect(embed.author.icon_url).toBe(nowPlayingObject.sourceImage);
+      expect(embed.title).toBe(nowPlayingObject.title);
+      expect(embed.description).toBe(`Length: ${secondsToTimestamp(parseInt(nowPlayingObject.duration, 10))}`);
+      expect(embed.image.url).toBe(nowPlayingObject.image);
+      expect(embed.url).toBe(nowPlayingObject.url);
+      expect(embed.footer.text).toBe(`Requested by ${nowPlayingObject.requestedBy}`);
     });
   });
 });

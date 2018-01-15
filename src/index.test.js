@@ -1,5 +1,6 @@
 /* eslint-env jest */
 const { RichEmbed } = require('discord.js');
+const format = require('string-format');
 
 const defaultLogging = require('./config/logging.js');
 const defaultReplies = require('./config/replies.js');
@@ -446,19 +447,121 @@ describe('MusicBot', () => {
         expect(response.embed.description).toBe(expectedEmbed.description);
       });
 
-      xdescribe('if the command is invalid', () => {
+      describe('if the command is invalid', () => {
         test('then a reply to the user with an unknown command message is sent', () => {
-          expect(false).toBe(true);
+          let response;
+
+          const message = {
+            content: '!abc',
+            reply: (text) => {
+              response = text;
+            },
+            member: {
+              id: '123456789',
+              user: {
+                username: '123abc',
+              },
+            },
+          };
+
+          const groupId = 'group1';
+
+          const config = {
+            permissions: {
+              groups: {
+                [groupId]: {
+                  help: true,
+                },
+              },
+              users: {
+                [message.member.id]: groupId,
+              },
+            },
+          };
+
+          const bot = new MusicBot(config);
+
+          bot.handleCommand(message);
+
+          expect(response).toBe(defaultReplies.general.unknownCommand);
         });
       });
 
-      xdescribe('if the command is valid', () => {
+      describe('if the command is valid', () => {
         test('and the given the user has permissions to use it, it is run', () => {
-          expect(false).toBe(true);
+          let response;
+
+          const message = {
+            content: '!skip',
+            reply: (text) => {
+              response = text;
+            },
+            member: {
+              id: '123456789',
+              user: {
+                username: '123abc',
+              },
+            },
+          };
+
+          const groupId = 'group1';
+
+          const config = {
+            permissions: {
+              groups: {
+                [groupId]: {
+                  help: true,
+                },
+              },
+              users: {
+                [message.member.id]: groupId,
+              },
+            },
+          };
+
+          const bot = new MusicBot(config);
+
+          bot.handleCommand(message);
+
+          expect(response).toBe(defaultReplies.skipCommand.notConnectedToVoice);
         });
 
         test('but the given user does not have permission to use it, then it replies with a no permission message', () => {
-          expect(false).toBe(true);
+          let response;
+
+          const message = {
+            content: '!setavatar thisimageurl',
+            reply: (text) => {
+              response = text;
+            },
+            member: {
+              id: '123456789',
+              user: {
+                username: '123abc',
+              },
+            },
+          };
+
+          const groupId = 'group1';
+
+          const config = {
+            permissions: {
+              groups: {
+                [groupId]: {
+                  help: true,
+                },
+              },
+              users: {
+                [message.member.id]: groupId,
+              },
+            },
+          };
+
+          const bot = new MusicBot(config);
+
+          bot.handleCommand(message);
+
+          expect(response).toBe(defaultReplies.general.noPermission);
         });
       });
     });
@@ -495,22 +598,140 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('onMessage()', () => {
+  describe('onMessage()', () => {
     describe('When the bot receives a message', () => {
       test('it doesn\'t reply if it was it\'s own message', () => {
-        expect(false).toBe(true);
+        const botId = 'itme123';
+        const channelName = 'channelname123';
+
+        let response;
+
+        const message = {
+          content: 'my own message',
+          reply: (text) => {
+            response = text;
+          },
+          author: {
+            id: botId,
+          },
+          channel: {
+            name: channelName,
+          },
+        };
+
+        const bot = new MusicBot({});
+
+        bot.bot.user = { id: botId };
+        bot.activeTextChannel = { name: channelName };
+
+        bot.onMessage(message);
+
+        expect(response).toBeUndefined();
       });
 
       test('it doesn\'t reply if it wasn\'t in the commands channel', () => {
-        expect(false).toBe(true);
+        const userId = 'itme456';
+        const botId = 'itme123';
+        const channelNameA = 'channelname123';
+        const channelNameB = 'channelname456';
+
+        let response = 'abc';
+
+        const message = {
+          content: 'this image url',
+          reply: (text) => {
+            response = text;
+          },
+          author: {
+            id: userId,
+          },
+          channel: {
+            name: channelNameA,
+          },
+        };
+
+        const bot = new MusicBot({});
+
+        bot.bot.user = { id: botId };
+        bot.activeTextChannel = { name: channelNameB };
+
+        bot.onMessage(message);
+
+        expect(response).toBe('abc');
       });
 
       test('it replies directly to the user if it was mentioned', () => {
-        expect(false).toBe(true);
+        const userId = 'itme456';
+        const botId = 'itme123';
+        const channelName = 'channelname123';
+
+        const expectedOutput = format(
+          defaultReplies.general.mentionedMessage,
+          userId,
+          `${defaultSettings.commandPrefix}help`,
+        );
+
+        let response;
+
+        const message = {
+          content: 'hello!',
+          author: {
+            id: userId,
+          },
+          member: {
+            toString: () => userId,
+          },
+          channel: {
+            name: channelName,
+            send: (text) => {
+              response = text;
+            },
+          },
+          isMentioned: () => true,
+        };
+
+        const bot = new MusicBot({});
+
+        bot.bot.user = { id: botId };
+        bot.activeTextChannel = { name: channelName };
+
+        bot.onMessage(message);
+
+        expect(response).toBe(expectedOutput);
       });
 
       test('it attempts to handle the command if the message begun with the command prefix', () => {
-        expect(false).toBe(true);
+        const userId = 'itme456';
+        const botId = 'itme123';
+        const channelName = 'channelname123';
+
+        let response;
+
+        const message = {
+          content: '!help',
+          author: {
+            id: userId,
+          },
+          member: {
+            toString: () => userId,
+          },
+          channel: {
+            name: channelName,
+          },
+          isMentioned: () => false,
+        };
+
+        const bot = new MusicBot({});
+
+        bot.bot.user = { id: botId };
+        bot.activeTextChannel = { name: channelName };
+        bot.handleCommand = (cmdMessage) => {
+          response = cmdMessage.content;
+        };
+
+        bot.onMessage(message);
+
+        expect(response).toBe(message.content);
       });
     });
   });
