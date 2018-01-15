@@ -15,11 +15,27 @@ module.exports = {
     youtubeVideoAdded: 'Added **{}** to the queue.',
   },
 
+  summonCommand: {
+    // reply + error
+    couldntConnect: 'I couldn\'t connect to your voice channel',
+    // reply
+    notInVoiceChannel: 'You need to be in a voice channel to summon me!',
+  },
+
   disconnectCommand: {
     // reply
     notConnectedToVoice: 'I can\'t disconnect if I\'m not connected...',
     // reply
     notInSendersChannel: 'You should really be listening to me before trying to do that :thinking:',
+  },
+
+  playCommand: {
+    // reply | help command
+    unknownPlayUrl: 'I didn\'t understand that URL.',
+    // reply
+    notConnectedToVoice: 'I can\'t play anything when I\'m not connected to a voice channel!',
+    // reply
+    notInSendersChannel: 'You need to summon me to your channel first!',
   },
 
   pauseCommand: {
@@ -29,15 +45,6 @@ module.exports = {
     notConnectedToVoice: 'I can\'t pause anything when I\'m not connected to a voice channel!',
     // reply
     notInSendersChannel: 'You should really be listening to me before trying to pause anything :neutral_face:',
-  },
-
-  playCommand: {
-    // reply | help command
-    unknownPlayUrl: 'I either don\'t support or couldn\'t understand that URL.',
-    // reply
-    notConnectedToVoice: 'I can\'t play anything when I\'m not connected to a voice channel!',
-    // reply
-    notInSendersChannel: 'You need to summon me to your channel first!',
   },
 
   resumeCommand: {
@@ -65,25 +72,16 @@ module.exports = {
     nothingPlaying: 'I can\'t skip when not playing',
   },
 
-  summonCommand: {
-    // reply + error
-    couldntConnect: 'I couldn\'t connect to your voice channel',
+  nowPlayingCommand: {
     // reply
-    notInVoiceChannel: 'You need to be in a voice channel to summon me!',
+    notConnectedToVoice: 'I can\'t be playing anything when I\'m not even connected to a voice channel!',
+    // reply
+    nothingPlaying: 'There\'s nothing playing right now.',
   },
 
   helpCommand: {
     // reply | help command
     unknown: 'I can\'t see a command or alias for that one... why don\'t you try `{}`?',
-  },
-
-  setAvatarCommand: {
-    // reply
-    success: ':ok_hand: Avatar successfully set!',
-    // reply + error
-    error: 'Unable to set avatar',
-    // reply
-    invalidUrl: 'Are you sure that\'s a valid URL..?',
   },
 
   setUsernameCommand: {
@@ -93,5 +91,14 @@ module.exports = {
     error: 'Unable to set username',
     // reply
     invalidUsername: 'Uhh... that doesn\'t seem to be something I could name myself...',
+  },
+
+  setAvatarCommand: {
+    // reply
+    success: ':ok_hand: Avatar successfully set!',
+    // reply + error
+    error: 'Unable to set avatar',
+    // reply
+    invalidUrl: 'Are you sure that\'s a valid URL..?',
   },
 };

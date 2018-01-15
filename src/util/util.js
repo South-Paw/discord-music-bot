@@ -1,3 +1,4 @@
+const { RichEmbed } = require('discord.js');
 const ytdl = require('ytdl-core');
 
 /**
@@ -118,9 +119,42 @@ const getYoutubePlaylistId = (url) => {
   return null;
 };
 
+/**
+ * Returns a RichEmbed of the now playing song.
+ *
+ * @param  {string} title       - Song title.
+ * @param  {string} image       - Song image.
+ * @param  {string} url         - Url of song source.
+ * @param  {string} duration    - Duration of song in seconds.
+ * @param  {string} requestedBy - User that requested the song.
+ * @param  {string} source      - Playback source.
+ * @param  {string} sourceImage - Playback source logo/image.
+ * @return {RichEmbed}          - The embed to be sent back to the activeTextChannel.
+ */
+const getNowPlayingEmbed = ({
+  title,
+  image,
+  url,
+  duration,
+  requestedBy,
+  source,
+  sourceImage,
+}) => {
+  const embed = new RichEmbed()
+    .setAuthor(`Now Playing (via ${source})`, sourceImage)
+    .setTitle(title)
+    .setDescription(`Length: ${secondsToTimestamp(parseInt(duration, 10))}`)
+    .setImage(image)
+    .setURL(url)
+    .setFooter(`Requested by ${requestedBy}`);
+
+  return embed;
+};
+
 module.exports = {
   secondsToTimestamp,
   getYoutubeVideoDetails,
   getYoutubeVideoId,
   getYoutubePlaylistId,
+  getNowPlayingEmbed,
 };

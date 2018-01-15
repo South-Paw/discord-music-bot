@@ -17,7 +17,6 @@
 
 /* eslint-disable no-console */
 const Discord = require('discord.js');
-const { RichEmbed } = require('discord.js');
 const format = require('string-format');
 const ytdl = require('ytdl-core');
 const commands = require('./commands/index.js');
@@ -354,13 +353,7 @@ class MusicBot {
 
     this.setBotNowPlaying(nextSong.title);
 
-    const embed = new RichEmbed()
-      .setAuthor(`Now Playing (via ${nextSong.source})`, nextSong.sourceImage)
-      .setTitle(nextSong.title)
-      .setDescription(`Length: ${util.secondsToTimestamp(nextSong.duration)}`)
-      .setImage(nextSong.image)
-      .setURL(nextSong.url)
-      .setFooter(`Requested by ${nextSong.requestedBy}`);
+    const embed = util.getNowPlayingEmbed(nextSong);
 
     this.activeTextChannel.send({ embed });
 
