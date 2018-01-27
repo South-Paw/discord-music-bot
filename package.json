@@ -39,14 +39,14 @@
     "node-opus": "^0.2.6",
     "string-format": "^0.5.0",
     "url-parse": "^1.1.9",
-    "ytdl-core": "^0.18.1"
+    "ytdl-core": "^0.19.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "eslint": "^4.11.0",
+    "eslint": "^4.16.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "jest": "^22.0.6"
+    "jest": "^22.1.4"
   },
   "engines": {
     "node": ">=8.0.0"

@@ -4,9 +4,10 @@
 
 [![discord-musicbot on npm](https://nodei.co/npm/discord-musicbot.png)](https://nodei.co/npm/discord-musicbot/)
 
-[![travis-ci Build Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
-[![coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
-[![bitHound Dependencies](https://img.shields.io/bithound/dependencies/github/South-Paw/discord-music-bot.svg)](https://www.bithound.io/github/South-Paw/discord-music-bot/master/dependencies/npm)
+[![CI Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
+[![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
+[![Dependencies](https://david-dm.org/South-Paw/discord-music-bot.svg)](https://david-dm.org/South-Paw/discord-music-bot)
+[![Dev Dependencies](https://david-dm.org/South-Paw/discord-music-bot/dev-status.svg)](https://david-dm.org/South-Paw/discord-music-bot?type=dev)
 
 ---
 
