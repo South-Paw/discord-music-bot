@@ -16,7 +16,9 @@
 * Documentation will be added when there's something a bit more tangible to use.
 * A `v1.0.0` release will be tagged when it's a bit more completed.
 
-Until then, watch this space and let me know if there's anything I should consider building into it.
+Until then, watch this space and let me know if there's anything I should consider building into it by [raising an issue](https://github.com/South-Paw/discord-music-bot/issues/new).
+
+Also check out the [v1.0.0 board](https://github.com/South-Paw/discord-music-bot/projects/6) for progress and feature report.
 
 If you get this running, use `!help` to get a list of commands.
 
@@ -122,6 +124,9 @@ musicBot.run();
 
 ## License
 
+This project is licensed under [GNU GPLv3](https://github.com/South-Paw/discord-music-bot/blob/master/LICENSE)
+
+```
 Copyright (C) 2017 Alex Gabites
 
 This program is free software: you can redistribute it and/or modify
@@ -136,3 +141,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
+```
