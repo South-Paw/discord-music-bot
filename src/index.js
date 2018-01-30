@@ -284,16 +284,17 @@ class MusicBot {
    * @return {object}         - The corresponding command object or false if none was found.
    */
   findCommand(command) {
-    for (let i = 0; i < this.commands.length; i += 1) {
-      const thisCmd = this.commands[i];
+    let selected;
 
-      for (let j = 0; j < thisCmd.info.aliases.length; j += 1) {
-        if (thisCmd.info.aliases[j] === command.toLowerCase()) {
-          return thisCmd;
+    this.commands.forEach((botCommand) => {
+      botCommand.info.aliases.forEach((alias) => {
+        if (alias === command.toLowerCase()) {
+          selected = botCommand;
         }
-      }
-    }
+      });
+    });
 
+    if (selected) return selected;
     return false;
   }
 
