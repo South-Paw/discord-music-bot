@@ -93,6 +93,8 @@ module.exports = {
   helpCommand: {
     // reply | help command
     unknown: 'I can\'t see a command or alias for that one... why don\'t you try `{}`?',
+    // reply
+    hereYouAre: 'Here\'s everything I could find...',
   },
 
   setUsernameCommand: {
