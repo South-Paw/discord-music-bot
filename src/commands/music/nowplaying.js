@@ -18,9 +18,7 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
   }
 
   if (musicbot.nowPlaying) {
-    const embed = util.getNowPlayingEmbed(musicbot.nowPlaying);
-
-    musicbot.activeTextChannel.send({ embed });
+    musicbot.activeTextChannel.send({ embed: util.getNowPlayingEmbed(musicbot.nowPlaying) });
   } else {
     msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'nothingPlaying'));
   }

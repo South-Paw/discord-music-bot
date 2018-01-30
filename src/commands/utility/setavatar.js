@@ -15,10 +15,7 @@ const run = function run(musicbot, msg, args) {
   if (args[0] && args[0].match(urlRegex)) {
     musicbot.bot.user.setAvatar(args[0])
       .then(() => msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'success')))
-      .catch((error) => {
-        msg.reply(`${musicbot.getReplyMsg(COMMAND_GROUP, 'error')}:\n\`\`\`${error}\`\`\``);
-        // TODO: requires logging when requests fail
-      });
+      .catch(error => msg.reply(`${musicbot.getReplyMsg(COMMAND_GROUP, 'error')}:\n\`\`\`${error}\`\`\``));
   } else {
     msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'invalidUrl'));
   }

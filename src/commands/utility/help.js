@@ -6,48 +6,51 @@ const COMMAND_GROUP = 'helpCommand';
 /**
  * Turns a info object into a RichEmbed. Only used for single commands.
  *
- * @param  {string} preifx - The bots command prefix.
- * @param  {object} info   - The info object from a command.
- * @return {RichEmbed}     - A discord.js RichEmbed containing the info object.
+ * @param  {string} preifx  - The bots command prefix.
+ * @param  {object} command - The info object from a command.
+ * @return {RichEmbed}      - A discord.js RichEmbed containing the info object.
  */
-function infoToEmbed(preifx, info) {
+function infoToEmbed(preifx, command) {
   let commandAliases = '';
 
-  for (let j = 0; j < info.aliases.length; j += 1) {
-    commandAliases += `\`${preifx}${info.aliases[j]}\` `;
-  }
+  command.aliases.forEach((alias) => {
+    commandAliases += `\`${preifx}${alias}\` `;
+  });
 
-  let commandDescription = `${info.description}\n\n`;
-  commandDescription += `**Usage:** \`${preifx + info.usage}\`\n\n`;
+  let commandDescription = `${command.description}\n\n`;
+  commandDescription += `**Usage:** \`${preifx + command.usage}\`\n\n`;
   commandDescription += `**Aliases:** ${commandAliases}`;
 
   return new RichEmbed()
-    .setAuthor(`${info.name}`)
+    .setAuthor(`${command.name}`)
     .setDescription(commandDescription);
 }
 
 /**
- * Turns a info object into a code block.
+ * Turns a list of info objects into string of code blocks.
  *
- * @param  {string} preifx - The bots command prefix.
- * @param  {object} info   - The info object from a command.
- * @return {string}        - A code block containing the info object.
+ * @param  {string} preifx       - The bots command prefix.
+ * @param  {array}  messageItems - A list of info objects from a command.
+ * @return {string}              - A string containing the info objects.
  */
-function infoToText(preifx, info) {
-  let commandAliases = '';
+function itemsToHelpBlock(preifx, messageItems) {
+  let message = '';
 
-  for (let j = 0; j < info.aliases.length; j += 1) {
-    commandAliases += `${preifx}${info.aliases[j]} `;
-  }
+  messageItems.forEach(({ info: command }) => {
+    let commandAliases = '';
 
-  let infoBlock = '';
-  infoBlock += '```\n';
-  infoBlock += `${info.name} - ${info.description}\n\n`;
-  infoBlock += `Usage:   ${preifx + info.usage}\n`;
-  infoBlock += `Aliases: ${commandAliases}`;
-  infoBlock += '```\n';
+    command.aliases.forEach((alias) => {
+      commandAliases += `${preifx}${alias} `;
+    });
 
-  return infoBlock;
+    message += '```\n';
+    message += `${command.name} - ${command.description}\n\n`;
+    message += `Usage:   ${preifx + command.usage}\n`;
+    message += `Aliases: ${commandAliases}`;
+    message += '```';
+  });
+
+  return message;
 }
 
 /**
@@ -72,18 +75,27 @@ const run = function run(musicbot, msg, args) { // eslint-disable-line
     if (!command) {
       msg.reply(format(musicbot.getReplyMsg(COMMAND_GROUP, 'unknown'), `${commandPrefix}help`));
     } else {
-      const embed = infoToEmbed(commandPrefix, command.info);
-
-      msg.reply({ embed });
+      msg.reply({ embed: infoToEmbed(commandPrefix, command.info) });
     }
   } else {
-    let helpText = '';
+    const maxItemsInMessage = 15;
+    let messageItems = [];
 
-    for (let i = 0; i < musicbot.commands.length; i += 1) {
-      helpText += infoToText(commandPrefix, musicbot.commands[i].info);
+    msg.reply(musicbot.getReplyMsg(COMMAND_GROUP, 'hereYouAre'));
+
+    musicbot.commands.forEach((item) => {
+      if (maxItemsInMessage === messageItems.length) {
+        musicbot.activeTextChannel.send(itemsToHelpBlock(commandPrefix, messageItems));
+
+        messageItems = [];
+      }
+
+      messageItems.push(item);
+    });
+
+    if (messageItems.length > 0) {
+      musicbot.activeTextChannel.send(itemsToHelpBlock(commandPrefix, messageItems));
     }
-
-    msg.reply(`${helpText}`);
   }
 };
 

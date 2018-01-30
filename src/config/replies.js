@@ -12,7 +12,7 @@ module.exports = {
     // message
     queueEmpty: 'Looks like your playlist is empty. :sob:',
     // reply | video title
-    youtubeVideoAdded: 'Added **{}** to the queue.',
+    youtubeVideoAdded: 'Added "{}" to the queue.',
   },
 
   summonCommand: {
@@ -83,9 +83,18 @@ module.exports = {
     nothingPlaying: 'There\'s nothing playing right now.',
   },
 
+  playlistCommand: {
+    // reply
+    queueIsEmpty: 'It would seem the playlist is empty. :sob:',
+    // reply
+    currentPlaylist: 'Here\'s the current playlist :notes:',
+  },
+
   helpCommand: {
     // reply | help command
     unknown: 'I can\'t see a command or alias for that one... why don\'t you try `{}`?',
+    // reply
+    hereYouAre: 'Here\'s everything I could find...',
   },
 
   setUsernameCommand: {
