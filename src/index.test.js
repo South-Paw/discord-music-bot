@@ -138,7 +138,7 @@ describe('MusicBot', () => {
 
       bot.bot.user = {
         presence: { game: 'hello world!' },
-        setGame: (string) => { bot.bot.user.presence = { game: string }; },
+        setActivity: (string) => { bot.bot.user.presence = { game: string }; },
       };
 
       bot.setBotNowPlaying(nowPlaying);
@@ -152,7 +152,7 @@ describe('MusicBot', () => {
 
       bot.bot.user = {
         presence: { game: null },
-        setGame: (string) => { bot.bot.user.presence = { game: string }; },
+        setActivity: (string) => { bot.bot.user.presence = { game: string }; },
       };
 
       bot.setBotNowPlaying(nowPlaying);

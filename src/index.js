@@ -157,7 +157,7 @@ class MusicBot {
    * @param {string} nowPlaying - The string to set the 'Now Playing' to, pass `null` to clear.
    */
   setBotNowPlaying(nowPlaying) {
-    this.bot.user.setGame(nowPlaying);
+    this.bot.user.setActivity(nowPlaying);
   }
 
   /**
@@ -338,7 +338,7 @@ class MusicBot {
    */
   playNextSong() {
     if (this.isQueueEmpty()) {
-      this.activeTextChannel.sendMessage(this.getReplyMsg(COMMAND_GROUP, 'queueEmpty'));
+      this.activeTextChannel.send(this.getReplyMsg(COMMAND_GROUP, 'queueEmpty'));
       return;
     }
 
