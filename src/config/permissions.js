@@ -8,6 +8,7 @@ module.exports = {
     stop: true,
     skip: true,
     nowplaying: true,
+    playlist: true,
     help: true,
     setavatar: false,
     setusername: false,

@@ -12,7 +12,7 @@ module.exports = {
     // message
     queueEmpty: 'Looks like your playlist is empty. :sob:',
     // reply | video title
-    youtubeVideoAdded: 'Added **{}** to the queue.',
+    youtubeVideoAdded: 'Added "{}" to the queue.',
   },
 
   summonCommand: {
@@ -81,6 +81,13 @@ module.exports = {
     notConnectedToVoice: 'I can\'t be playing anything when I\'m not even connected to a voice channel!',
     // reply
     nothingPlaying: 'There\'s nothing playing right now.',
+  },
+
+  playlistCommand: {
+    // reply
+    queueIsEmpty: 'It would seem the playlist is empty. :sob:',
+    // reply
+    currentPlaylist: 'Here\'s the current playlist :notes:',
   },
 
   helpCommand: {
