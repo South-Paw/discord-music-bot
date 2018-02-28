@@ -37,20 +37,17 @@ const secondsToTimestamp = (seconds) => {
  *                              sourceImage.
  */
 const getYoutubeVideoDetails = (requestor, videoId) => new Promise((resolve) => {
-  ytdl.getInfo(
-    videoId,
-    (error, info) => {
-      resolve({
-        title: info.title,
-        image: info.iurlmaxres,
-        url: info.video_url,
-        duration: info.length_seconds,
-        requestedBy: requestor,
-        source: 'Youtube',
-        sourceImage: 'https://i.imgur.com/nZ5aw5i.png',
-      });
-    },
-  );
+  ytdl.getInfo(videoId, (error, info) => {
+    resolve({
+      title: info.title,
+      image: info.iurlmaxres,
+      url: info.video_url,
+      duration: info.length_seconds,
+      requestedBy: requestor,
+      source: 'Youtube',
+      sourceImage: 'https://i.imgur.com/nZ5aw5i.png',
+    });
+  });
 });
 
 /**
