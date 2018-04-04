@@ -127,9 +127,8 @@ class MusicBot {
     this.logger(LOG_INFO, `Successfully connected to ${server.name}!`);
   }
 
-  onMessage() {
-
-  }
+  // eslint-disable-next-line
+  onMessage() {}
 
   onDisconnect({ reason, code }) {
     this.logger(LOG_ERROR, `Bot was disconnected from server.\nReason: ${reason}\nCode: ${code}`);

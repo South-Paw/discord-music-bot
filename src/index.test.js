@@ -1,4 +1,10 @@
 const MusicBot = require('./index');
+const {
+  LOG_INFO,
+  LOG_WARN,
+  LOG_ERROR,
+  LOG_DEBUG,
+} = require('./constants.js');
 
 describe('MusicBot', () => {
   describe('isDebug()', () => {
@@ -16,28 +22,88 @@ describe('MusicBot', () => {
   });
 
   describe('logger()', () => {
-    xit('defaults to `console.log`', () => {
-      expect(false).toBeTruthy();
+    it('defaults to `console.log`', () => {
+      const spy = jest.spyOn(global.console, 'log');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({});
+
+      bot.logger(testMsg, testMsg);
+
+      expect(spy).toHaveBeenCalledWith(testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    xit('uses `console.info` for `LOG_INFO`', () => {
-      expect(false).toBeTruthy();
+    it('uses `console.info` for `LOG_INFO`', () => {
+      const spy = jest.spyOn(global.console, 'info');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({});
+
+      bot.logger(LOG_INFO, testMsg);
+
+      expect(spy).toHaveBeenCalledWith(testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    xit('uses `console.warn` for `LOG_WARN`', () => {
-      expect(false).toBeTruthy();
+    it('uses `console.warn` for `LOG_WARN`', () => {
+      const spy = jest.spyOn(global.console, 'warn');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({});
+
+      bot.logger(LOG_WARN, testMsg);
+
+      expect(spy).toHaveBeenCalledWith(testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    xit('uses `console.error` for `LOG_ERROR`', () => {
-      expect(false).toBeTruthy();
+    it('uses `console.error` for `LOG_ERROR`', () => {
+      const spy = jest.spyOn(global.console, 'error');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({});
+
+      bot.logger(LOG_ERROR, testMsg);
+
+      expect(spy).toHaveBeenCalledWith(testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    xit('uses `console.debug` for `LOG_DEBUG` when `isDebug()=true`', () => {
-      expect(false).toBeTruthy();
+    it('uses `console.debug` for `LOG_DEBUG` when `isDebug()=true`', () => {
+      const spy = jest.spyOn(global.console, 'debug');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({ debug: true });
+
+      bot.logger(LOG_DEBUG, testMsg);
+
+      expect(spy).toHaveBeenCalledWith(testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    xit('blocks the `console.debug` for `LOG_DEBUG` when `isDebug=false`', () => {
-      expect(false).toBeTruthy();
+    it('doesn\'t call `console.debug` for `LOG_DEBUG` when `isDebug=false`', () => {
+      const spy = jest.spyOn(global.console, 'debug');
+
+      const testMsg = 'aNewTest';
+      const bot = new MusicBot({});
+
+      bot.logger(LOG_DEBUG, testMsg);
+
+      expect(spy).toHaveBeenCalledTimes(0);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
   });
 
@@ -164,11 +230,36 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('onDisconnect()', () => {
-    it('logs an error message to the console', () => {
+  describe('onDisconnect()', () => {
+    it('calls the logger to log an error message to the console', () => {
+      const spy = jest.spyOn(global.console, 'error');
+
+      const error = { reason: 'testing', code: 0 };
+      const bot = new MusicBot({});
+
+      try {
+        bot.onDisconnect(error);
+      } catch (e) {} // eslint-disable-line
+
+      expect(spy).toHaveBeenCalledWith(`Bot was disconnected from server.\nReason: ${error.reason}\nCode: ${error.code}`);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
     it('throws an Error when disconnected', () => {
+      const error = { reason: 'testing', code: 0 };
+      const bot = new MusicBot({});
+
+      let result;
+
+      try {
+        bot.onDisconnect(error);
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe('Bot was disconnected from server.');
     });
   });
 
