@@ -5,7 +5,7 @@
 [![discord-musicbot on npm](https://nodei.co/npm/discord-musicbot.png)](https://nodei.co/npm/discord-musicbot/)
 
 [![CI Status](https://img.shields.io/travis/South-Paw/discord-music-bot/refactor.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
-[![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot/refactor.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
+[![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot/refactor.svg)](https://coveralls.io/github/South-Paw/discord-music-bot?branch=refactor)
 [![Dependencies](https://david-dm.org/South-Paw/discord-music-bot.svg)](https://david-dm.org/South-Paw/discord-music-bot)
 [![Dev Dependencies](https://david-dm.org/South-Paw/discord-music-bot/dev-status.svg)](https://david-dm.org/South-Paw/discord-music-bot?type=dev)
 
