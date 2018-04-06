@@ -1,10 +1,15 @@
 const MusicBot = require('./index');
+const { constants: messageConstants } = require('./config/messages.js');
+const { constants: preferenceConstants } = require('./config/preferences.js');
 const {
   LOG_INFO,
   LOG_WARN,
   LOG_ERROR,
   LOG_DEBUG,
 } = require('./constants.js');
+
+const { BOT_MENTIONED } = messageConstants;
+const { COMMAND_PREFIX } = preferenceConstants;
 
 describe('MusicBot', () => {
   describe('isDebug()', () => {
@@ -123,8 +128,10 @@ describe('MusicBot', () => {
       expect(error.message).toBe(`Failed to get message with key '${key}'`);
     });
 
-    xit('retrieves the key if valid', () => {
-      expect(false).toBeTruthy();
+    it('retrieves the key if valid', () => {
+      const bot = new MusicBot({});
+
+      expect(bot.getMessage(BOT_MENTIONED)).toBe('Hey {}, you should try `{}` for a list of commands. :thumbsup:');
     });
   });
 
@@ -144,8 +151,10 @@ describe('MusicBot', () => {
       expect(error.message).toBe(`Failed to get preference with key '${key}'`);
     });
 
-    xit('retrieves the key if valid', () => {
-      expect(false).toBeTruthy();
+    it('retrieves the key if valid', () => {
+      const bot = new MusicBot({});
+
+      expect(bot.getPreference(COMMAND_PREFIX)).toBe('!');
     });
   });
 
@@ -174,6 +183,32 @@ describe('MusicBot', () => {
       bot.resetState();
 
       expect(bot.state).toEqual(initialState);
+    });
+  });
+
+  describe('messageHandler()', () => {
+    it('returns a message given a valid key and message', () => {
+      const bot = new MusicBot({});
+      const message = { member: { user: { toString: () => 'abc' } } };
+
+      expect(bot.messageHandler(BOT_MENTIONED, message))
+        .toBe('Hey abc, you should try `!` for a list of commands. :thumbsup:');
+    });
+
+    it('throws an Error when the key\'s invalid', () => {
+      const bot = new MusicBot({});
+      const message = { member: { user: { toString: () => 'abc' } } };
+      const messageKey = 'unknown';
+
+      let error;
+
+      try {
+        bot.messageHandler(messageKey, message);
+      } catch (e) {
+        error = e;
+      }
+
+      expect(error.message).toBe(`Failed to handle message with key '${messageKey}'`);
     });
   });
 
@@ -225,8 +260,83 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('onMessage()', () => {
-    it('', () => {
+  describe('onMessage()', () => {
+    it('should not reply to it\'s own messages', () => {
+      const botUserId = 123;
+      const channelName = 'test-channel';
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+      bot.bot = { user: { id: botUserId } };
+      bot.setState({ activeTextChannel: { name: channelName } });
+
+      const message = {
+        author: { id: botUserId },
+        channel: { name: channelName, send: mockFn },
+      };
+
+      bot.onMessage(message);
+
+      expect(mockFn.mock.calls.length).toBe(0);
+    });
+
+    it('should not reply to messages in other channels', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: 'test-channel' } });
+
+      const message = {
+        author: { id: 456 },
+        channel: { name: 'test-channel2', send: mockFn },
+      };
+
+      bot.onMessage(message);
+
+      expect(mockFn.mock.calls.length).toBe(0);
+    });
+
+    it('should reply to the user if the bot was mentioned', () => {
+      const channelName = 'test-channel';
+      const mockMessageHandler = jest.fn();
+      const mockSend = jest.fn();
+
+      const bot = new MusicBot({});
+      bot.messageHandler = mockMessageHandler;
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: channelName } });
+
+      const message = {
+        author: { id: 456 },
+        channel: { name: channelName, send: mockSend },
+        isMentioned: () => true,
+      };
+
+      bot.onMessage(message);
+
+      expect(mockSend.mock.calls.length).toBe(1);
+    });
+
+    it('will not do anything when it\'s just a message in the channel', () => {
+      const channelName = 'test-channel';
+      const mockMessageHandler = jest.fn();
+      const mockSend = jest.fn();
+
+      const bot = new MusicBot({});
+      bot.messageHandler = mockMessageHandler;
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: channelName } });
+
+      const message = {
+        author: { id: 456 },
+        channel: { name: channelName, send: mockSend },
+        isMentioned: () => false,
+      };
+
+      bot.onMessage(message);
+
+      expect(mockSend.mock.calls.length).toBe(0);
     });
   });
 

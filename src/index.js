@@ -17,15 +17,28 @@
 
 const Discord = require('discord.js');
 
-const defaultMessages = require('./config/messages.js');
-const defaultPermissionGroups = require('./config/permissionGroups.js');
-const defaultPreferences = require('./config/preferences.js');
+const messageHandlers = require('./handlers/message.js');
+const {
+  constants: messageConstants,
+  messages: defaultMessages,
+} = require('./config/messages.js');
+const {
+  defaultGlobal: defaultGlobalPermissions,
+  defaultGroups: defaultPermissionGroups,
+} = require('./config/permissions.js');
+const {
+  preferences: defaultPreferences,
+} = require('./config/preferences.js');
 const {
   LOG_INFO,
   LOG_WARN,
   LOG_ERROR,
   LOG_DEBUG,
 } = require('./constants.js');
+
+const {
+  BOT_MENTIONED,
+} = messageConstants;
 
 const defaultState = {
 };
@@ -48,6 +61,7 @@ class MusicBot {
       textChannelId,
       messages: { ...defaultMessages, ...messages },
       permissions: {
+        global: { ...defaultGlobalPermissions },
         groups: { ...defaultPermissionGroups, ...groups },
         users: { ...users },
       },
@@ -109,6 +123,14 @@ class MusicBot {
     this.state = { ...defaultState };
   }
 
+  messageHandler(messageKey, message) {
+    if (messageHandlers[messageKey]) {
+      return messageHandlers[messageKey](this, message);
+    }
+
+    throw new Error(`Failed to handle message with key '${messageKey}'`);
+  }
+
   onReady() {
     const { serverId, textChannelId } = this.settings;
 
@@ -122,13 +144,24 @@ class MusicBot {
       throw new Error(`Failed to find textChannelId '${textChannelId}'`);
     }
 
-    // this.setNowPlaying(null);
+    this.setState({ activeTextChannel });
 
-    this.logger(LOG_INFO, `Successfully connected to ${server.name}!`);
+    this.logger(LOG_INFO, `Successfully connected to '${server.name}'`);
   }
 
-  // eslint-disable-next-line
-  onMessage() {}
+  onMessage(message) {
+    const { author, channel } = message;
+    const { activeTextChannel } = this.state;
+
+    const isInCommandsChannel = (channel.name === activeTextChannel.name);
+    const isNotOwnMessage = (author.id !== this.bot.user.id);
+
+    if (isInCommandsChannel && isNotOwnMessage) {
+      if (message.isMentioned(this.bot.user)) {
+        message.channel.send(this.messageHandler(BOT_MENTIONED, message));
+      }
+    }
+  }
 
   onDisconnect({ reason, code }) {
     this.logger(LOG_ERROR, `Bot was disconnected from server.\nReason: ${reason}\nCode: ${code}`);
@@ -156,7 +189,7 @@ class MusicBot {
     this.bot.on('message', message => this.onMessage(message));
     this.bot.on('disconnect', event => this.onDisconnect(event));
 
-    this.logger('Logging into server...');
+    this.logger(LOG_INFO, 'Logging into server...');
 
     this.bot.login(token);
   }
