@@ -30,24 +30,30 @@
   },
   "scripts": {
     "lint": "eslint ./src",
+    "prepublishOnly": "npm run lint && npm run test",
+    "prettier": "prettier --write \"src/**/*.js\"",
     "test": "jest",
     "test/coverage": "jest --coverage"
   },
   "dependencies": {
     "discord.js": "^11.3.2",
-    "eslint-plugin-jest": "^21.15.0",
     "ffmpeg-binaries": "^3.2.2-3",
-    "node-opus": "^0.2.7",
+    "node-opus": "^0.3.0",
     "string-format": "^1.0.0",
-    "url-parse": "^1.2.0",
+    "url-parse": "^1.4.0",
     "ytdl-core": "^0.20.2"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
+    "coveralls": "^3.0.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.10.0",
-    "jest": "^22.4.3"
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jest": "^21.15.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "jest": "^22.4.3",
+    "prettier": "^1.12.1",
+    "rimraf": "^2.6.2"
   },
   "engines": {
     "node": ">=8.0.0"
