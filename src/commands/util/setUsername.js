@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 const run = (bot, args, message) => {
   console.log('set username command run!', args);
 };
