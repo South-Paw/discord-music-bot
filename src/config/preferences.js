@@ -1,14 +1,14 @@
 const COMMAND_PREFIX = 'command_prefix';
 
-const constants = {
+const preferenceConstants = {
   COMMAND_PREFIX,
 };
 
-const preferences = {
+const defaultPreferences = {
   [COMMAND_PREFIX]: '!',
 };
 
 module.exports = {
-  constants,
-  preferences,
+  preferenceConstants,
+  defaultPreferences,
 };

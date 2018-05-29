@@ -1,10 +1,8 @@
-const defaultGlobal = {
-};
+const defaultGlobalPermissions = {};
 
-const defaultGroups = {
-};
+const defaultPermissionGroups = {};
 
 module.exports = {
-  defaultGlobal,
-  defaultGroups,
+  defaultGlobalPermissions,
+  defaultPermissionGroups,
 };

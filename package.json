@@ -36,10 +36,11 @@
     "test/coverage": "jest --coverage"
   },
   "dependencies": {
+    "deepmerge": "^2.1.1",
     "discord.js": "^11.3.2",
     "ffmpeg-binaries": "^3.2.2-3",
     "node-opus": "^0.3.0",
-    "string-format": "^1.0.0",
+    "string-format": "^2.0.0",
     "url-parse": "^1.4.0",
     "ytdl-core": "^0.20.2"
   },
@@ -48,11 +49,11 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jest": "^21.15.1",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-prettier": "^2.6.0",
-    "jest": "^22.4.3",
-    "prettier": "^1.12.1",
+    "jest": "^23.0.1",
+    "prettier": "^1.13.2",
     "rimraf": "^2.6.2"
   },
   "engines": {
