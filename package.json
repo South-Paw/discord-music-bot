@@ -41,8 +41,8 @@
     "ffmpeg-binaries": "^3.2.2-3",
     "node-opus": "^0.3.0",
     "string-format": "^2.0.0",
-    "url-parse": "^1.4.0",
-    "ytdl-core": "^0.20.2"
+    "url-parse": "^1.4.1",
+    "ytdl-core": "^0.20.4"
   },
   "devDependencies": {
     "coveralls": "^3.0.1",
@@ -53,7 +53,7 @@
     "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^23.0.1",
-    "prettier": "^1.13.2",
+    "prettier": "^1.13.5",
     "rimraf": "^2.6.2"
   },
   "engines": {
