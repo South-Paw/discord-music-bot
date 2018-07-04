@@ -1,3 +1,5 @@
+const dateFormat = require('dateformat');
+
 const { commandAliases } = require('./config/commands');
 
 const findCommandKeyByAlias = givenAlias => {
@@ -12,6 +14,12 @@ const findCommandKeyByAlias = givenAlias => {
   return commandKey;
 };
 
+const getLoggerPrefix = level => {
+  const time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss:l');
+  return `[${time}] (${level.toUpperCase()})`;
+};
+
 module.exports = {
   findCommandKeyByAlias,
+  getLoggerPrefix,
 };

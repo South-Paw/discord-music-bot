@@ -36,6 +36,7 @@
     "test/coverage": "jest --coverage"
   },
   "dependencies": {
+    "dateformat": "^3.0.3",
     "deepmerge": "^2.1.1",
     "discord.js": "^11.3.2",
     "ffmpeg-binaries": "^3.2.2-3",

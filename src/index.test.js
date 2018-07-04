@@ -23,15 +23,17 @@ describe('MusicBot', () => {
   });
 
   describe('logger()', () => {
+    const noFunc = () => '';
+
     it('defaults to `console.log`', () => {
       const spy = jest.spyOn(global.console, 'log');
 
       const testMsg = 'test';
       const bot = new MusicBot({});
 
-      bot.logger(testMsg, testMsg);
+      bot.logger(testMsg, testMsg, noFunc);
 
-      expect(spy).toHaveBeenCalledWith(testMsg);
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
 
       spy.mockReset();
       spy.mockRestore();
@@ -43,9 +45,9 @@ describe('MusicBot', () => {
       const testMsg = 'test';
       const bot = new MusicBot({});
 
-      bot.logger(LOG_INFO, testMsg);
+      bot.logger(LOG_INFO, testMsg, noFunc);
 
-      expect(spy).toHaveBeenCalledWith(testMsg);
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
 
       spy.mockReset();
       spy.mockRestore();
@@ -57,9 +59,9 @@ describe('MusicBot', () => {
       const testMsg = 'test';
       const bot = new MusicBot({});
 
-      bot.logger(LOG_WARN, testMsg);
+      bot.logger(LOG_WARN, testMsg, noFunc);
 
-      expect(spy).toHaveBeenCalledWith(testMsg);
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
 
       spy.mockReset();
       spy.mockRestore();
@@ -71,9 +73,9 @@ describe('MusicBot', () => {
       const testMsg = 'test';
       const bot = new MusicBot({});
 
-      bot.logger(LOG_ERROR, testMsg);
+      bot.logger(LOG_ERROR, testMsg, noFunc);
 
-      expect(spy).toHaveBeenCalledWith(testMsg);
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
 
       spy.mockReset();
       spy.mockRestore();
@@ -85,9 +87,9 @@ describe('MusicBot', () => {
       const testMsg = 'test';
       const bot = new MusicBot({ debug: true });
 
-      bot.logger(LOG_DEBUG, testMsg);
+      bot.logger(LOG_DEBUG, testMsg, noFunc);
 
-      expect(spy).toHaveBeenCalledWith(testMsg);
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
 
       spy.mockReset();
       spy.mockRestore();
@@ -99,7 +101,7 @@ describe('MusicBot', () => {
       const testMsg = 'aNewTest';
       const bot = new MusicBot({});
 
-      bot.logger(LOG_DEBUG, testMsg);
+      bot.logger(LOG_DEBUG, testMsg, noFunc);
 
       expect(spy).toHaveBeenCalledTimes(0);
 
@@ -433,7 +435,7 @@ describe('MusicBot', () => {
         bot.onDisconnect(error);
       } catch (e) {} // eslint-disable-line
 
-      expect(spy).toHaveBeenCalledWith(
+      expect(spy.mock.calls[0][1]).toBe(
         `Bot was disconnected from server.\nReason: ${error.reason}\nCode: ${error.code}`,
       );
 

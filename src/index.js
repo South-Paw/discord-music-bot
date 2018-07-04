@@ -24,7 +24,7 @@ const { messageConstants, defaultMessages } = require('./config/messages');
 const { defaultGlobalPermissions, defaultPermissionGroups } = require('./config/permissions');
 const { preferenceConstants, defaultPreferences } = require('./config/preferences');
 const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG } = require('./constants');
-const { findCommandKeyByAlias } = require('./util');
+const { findCommandKeyByAlias, getLoggerPrefix } = require('./util');
 
 const { BOT_MENTIONED, UNKNOWN_COMMAND } = messageConstants;
 const { COMMAND_PREFIX } = preferenceConstants;
@@ -58,23 +58,23 @@ class MusicBot {
     return this.settings.debug;
   }
 
-  logger(level, message) {
+  logger(level, message, prefix = getLoggerPrefix) {
     /* eslint-disable no-console */
     switch (level) {
       case LOG_INFO:
-        console.info(message);
+        console.info(prefix(level), message);
         break;
       case LOG_WARN:
-        console.warn(message);
+        console.warn(prefix(level), message);
         break;
       case LOG_ERROR:
-        console.error(message);
+        console.error(prefix(level), message);
         break;
       case LOG_DEBUG:
-        if (this.isDebug()) console.debug(message);
+        if (this.isDebug()) console.debug(prefix(level), message);
         break;
       default:
-        console.log(message);
+        console.log(prefix(level), message);
     }
     /* eslint-enable no-console */
   }
