@@ -16,36 +16,50 @@
  */
 
 const Discord = require('discord.js');
-const merge = require('deepmerge');
+const deepmerge = require('deepmerge');
 
-const messageHandlers = require('./handlers/message');
-const commandHandlers = require('./handlers/command');
-const { messageConstants, defaultMessages } = require('./config/messages');
-const { defaultGlobalPermissions, defaultPermissionGroups } = require('./config/permissions');
-const { preferenceConstants, defaultPreferences } = require('./config/preferences');
-const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG } = require('./constants');
+const { defaultCommands, defaultCommandDetails } = require('./defaults/commands');
+const { defaultMessageStrings, messageFunctions } = require('./defaults/messages');
+const { defaultGlobalPermissions, defaultGroupPermissions, defaultUserPermissions } = require('./defaults/permissions');
+const defaultPreferences = require('./defaults/preferences');
+
+const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } = require('./constants');
 const { findCommandKeyByAlias, getLoggerPrefix } = require('./util');
 
-const { BOT_MENTIONED, UNKNOWN_COMMAND } = messageConstants;
-const { COMMAND_PREFIX } = preferenceConstants;
-
-const defaultState = {};
+const defaultState = {
+  activeTextChannel: null,
+};
 
 class MusicBot {
-  constructor({ token, serverId, textChannelId, messages = {}, permissions = {}, preferences = {}, debug = false }) {
-    const { groups = {}, users = {} } = permissions;
+  constructor(config) {
+    const {
+      token,
+      serverId,
+      textChannelId,
+      commands = {},
+      commandDetails = {},
+      messageStrings = {},
+      permissions = {},
+      preferences = {},
+      debug = false,
+    } = config;
+
+    const { global: globalPermissions = {}, groups: groupPermissions = {}, users: usersPermissions = {} } = permissions;
 
     this.settings = {
       token,
       serverId,
       textChannelId,
-      messages: merge(defaultMessages, messages),
+      commands: deepmerge(defaultCommands, commands),
+      commandDetails: deepmerge(defaultCommandDetails, commandDetails),
+      messageFunctions,
+      messageStrings: deepmerge(defaultMessageStrings, messageStrings),
       permissions: {
-        global: { ...defaultGlobalPermissions },
-        groups: merge(defaultPermissionGroups, groups),
-        users: { ...users },
+        global: deepmerge(defaultGlobalPermissions, globalPermissions),
+        groups: deepmerge(defaultGroupPermissions, groupPermissions),
+        users: deepmerge(defaultUserPermissions, usersPermissions),
       },
-      preferences: merge(defaultPreferences, preferences),
+      preferences: deepmerge(defaultPreferences, preferences),
       debug,
     };
 
@@ -79,50 +93,55 @@ class MusicBot {
     /* eslint-enable no-console */
   }
 
-  getMessage(key) {
-    if (!this.settings.messages[key]) {
-      throw new Error(`Failed to get message with key '${key}'`);
-    }
-
-    return this.settings.messages[key];
-  }
-
-  getPreference(key) {
-    if (!this.settings.preferences[key]) {
-      throw new Error(`Failed to get preference with key '${key}'`);
-    }
-
-    return this.settings.preferences[key];
-  }
-
   setState(newState) {
-    this.state = merge(this.state, newState);
+    this.state = deepmerge(this.state, newState);
   }
 
   resetState() {
     this.state = { ...defaultState };
   }
 
-  messageHandler(messageKey, message) {
-    // TODO: log that message was handled
+  messageHandler(type, key, message, ...other) {
+    const messageString = this.settings.messageStrings[key];
+    const messageFunction = this.settings.messageFunctions[key];
 
-    if (messageHandlers[messageKey]) {
-      return messageHandlers[messageKey](this, message);
+    if (!messageString || !messageFunction) {
+      this.logger(LOG_ERROR, `Failed to find message (string or function) with key '${key}'`);
+      return;
     }
 
-    throw new Error(`Failed to handle message with key '${messageKey}'`);
+    const response = messageFunction(messageString, this, message, ...other);
+
+    switch (type) {
+      case SEND:
+        message.channel.send(response);
+        break;
+      case REPLY:
+        message.reply(response);
+        break;
+      case DIRECT_MESSAGE:
+        message.member.createDM().then(dm => dm.send(response));
+        break;
+      default:
+        this.logger(LOG_ERROR, `Unknown message return type '${type}'`);
+    }
   }
 
-  commandHandler(commandKey, args, message) {
-    // TODO: log that command was handled
+  commandHandler(key, args, message) {
+    const CommandClass = this.settings.commands[key];
 
-    if (commandHandlers[commandKey]) {
-      // TODO: check user has command permissions before calling it
-
-      return commandHandlers[commandKey](this, args, message);
+    if (!CommandClass) {
+      this.logger(LOG_ERROR, `Failed to find command with key '${key}'`);
+      return;
     }
 
-    throw new Error(`Failed to handle command with key '${commandKey}'`);
+    // TODO: check user has command permissions before calling it
+
+    const Command = new CommandClass(this, args, message);
+
+    this.logger(LOG_INFO, `'${message.member.displayName}' called '${key}' with ${JSON.stringify(args)}`);
+
+    Command.run();
   }
 
   onReady() {
@@ -151,21 +170,26 @@ class MusicBot {
     const isNotOwnMessage = author.id !== this.bot.user.id;
 
     if (isInCommandsChannel && isNotOwnMessage) {
-      if (message.isMentioned(this.bot.user)) {
-        message.channel.send(this.messageHandler(BOT_MENTIONED, message));
-        return;
-      }
+      // If the message begins with the command prefix
+      if (message.content && message.content[0] === this.settings.preferences.COMMAND_PREFIX) {
+        const params = message.content
+          .slice(1)
+          .split(' ')
+          .filter(param => param.length > 0);
 
-      if (message.content && message.content[0] === this.getPreference(COMMAND_PREFIX)) {
-        const params = message.content.slice(1).split(' ');
-        const commandAlias = findCommandKeyByAlias(params[0]);
+        const commandAlias = findCommandKeyByAlias(this.settings.commandDetails, params[0]);
 
         if (!commandAlias) {
-          message.channel.send(this.messageHandler(UNKNOWN_COMMAND, message));
+          this.messageHandler(REPLY, 'UNKNOWN_COMMAND', message);
           return;
         }
 
         this.commandHandler(commandAlias, params.slice(1), message);
+      }
+
+      // If the message mentions the bot
+      if (message.isMentioned(this.bot.user)) {
+        this.messageHandler(SEND, 'BOT_MENTIONED', message);
       }
     }
   }
@@ -176,7 +200,7 @@ class MusicBot {
     throw new Error('Bot was disconnected from server.');
   }
 
-  init() {
+  run() {
     const { token, serverId, textChannelId } = this.settings;
     const prefix = 'Failed to initialise:';
 

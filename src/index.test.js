@@ -1,13 +1,15 @@
 const MusicBot = require('./index');
-const { commandKeys } = require('./config/commands');
-const { messageConstants } = require('./config/messages');
-const { preferenceConstants } = require('./config/preferences');
 const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG } = require('./constants');
 
-const { BOT_MENTIONED } = messageConstants;
-const { COMMAND_PREFIX } = preferenceConstants;
+const defaultState = {
+  activeTextChannel: null,
+};
 
 describe('MusicBot', () => {
+  describe('constructor()', () => {
+    // noop
+  });
+
   describe('isDebug()', () => {
     it('returns false by default', () => {
       const bot = new MusicBot({});
@@ -110,61 +112,15 @@ describe('MusicBot', () => {
     });
   });
 
-  describe('getMessage()', () => {
-    it('throws an Error if the key is not found', () => {
-      const key = 'test';
-      const bot = new MusicBot({});
-
-      let error;
-
-      try {
-        bot.getMessage(key);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error.message).toBe(`Failed to get message with key '${key}'`);
-    });
-
-    it('retrieves the key if valid', () => {
-      const bot = new MusicBot({});
-
-      expect(bot.getMessage(BOT_MENTIONED)).toBe('Hey {}, you should try `{}` for a list of commands. :thumbsup:');
-    });
-  });
-
-  describe('getPreference()', () => {
-    it('throws an Error if the key is not found', () => {
-      const key = 'test';
-      const bot = new MusicBot({});
-
-      let error;
-
-      try {
-        bot.getPreference(key);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error.message).toBe(`Failed to get preference with key '${key}'`);
-    });
-
-    it('retrieves the key if valid', () => {
-      const bot = new MusicBot({});
-
-      expect(bot.getPreference(COMMAND_PREFIX)).toBe('!');
-    });
-  });
-
   describe('setState()', () => {
     it('merges the `newState` into the existing state', () => {
       const bot = new MusicBot({});
 
-      expect(bot.state).toEqual({});
+      expect(bot.state).toEqual(defaultState);
 
       bot.setState({ music: 'bot' });
 
-      expect(bot.state).toEqual({ music: 'bot' });
+      expect(bot.state).toEqual({ ...defaultState, music: 'bot' });
     });
   });
 
@@ -176,7 +132,7 @@ describe('MusicBot', () => {
 
       bot.setState({ thing: 'test' });
 
-      expect(bot.state).toEqual({ thing: 'test' });
+      expect(bot.state).toEqual({ ...defaultState, thing: 'test' });
 
       bot.resetState();
 
@@ -185,67 +141,67 @@ describe('MusicBot', () => {
   });
 
   describe('messageHandler()', () => {
-    it('returns a message given a valid key and message', () => {
-      const bot = new MusicBot({});
-      const message = { member: { user: { toString: () => 'abc' } } };
-
-      expect(bot.messageHandler(BOT_MENTIONED, message)).toBe(
-        'Hey abc, you should try `!` for a list of commands. :thumbsup:',
-      );
-    });
-
-    it("throws an Error when the key's invalid", () => {
-      const bot = new MusicBot({});
-      const message = { member: { user: { toString: () => 'abc' } } };
-      const messageKey = 'unknown';
-
-      let error;
-
-      try {
-        bot.messageHandler(messageKey, message);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error.message).toBe(`Failed to handle message with key '${messageKey}'`);
-    });
+    // it('returns a message given a valid key and message', () => {
+    //   const bot = new MusicBot({});
+    //   const message = { member: { user: { toString: () => 'abc' } } };
+    //
+    //   expect(bot.messageHandler(BOT_MENTIONED, message)).toBe(
+    //     'Hey abc, you should try `!` for a list of commands. :thumbsup:',
+    //   );
+    // });
+    //
+    // it("throws an Error when the key's invalid", () => {
+    //   const bot = new MusicBot({});
+    //   const message = { member: { user: { toString: () => 'abc' } } };
+    //   const messageKey = 'unknown';
+    //
+    //   let error;
+    //
+    //   try {
+    //     bot.messageHandler(messageKey, message);
+    //   } catch (e) {
+    //     error = e;
+    //   }
+    //
+    //   expect(error.message).toBe(`Failed to handle message with key '${messageKey}'`);
+    // });
   });
 
   describe('commandHandler()', () => {
     // FIXME: this test needs to be improved... currently it doesn't assert anything.
     // It just calls the command and only fails if the command doesn't run...
-    it('calls the run of a command for a given valid command key', () => {
-      const bot = new MusicBot({});
-      const args = [];
-      const message = {};
-
-      let error = null;
-
-      try {
-        bot.commandHandler(commandKeys.HELP_COMMAND, args, message);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error).toBeNull();
-    });
-
-    it('throws an Error when the command key is invalid', () => {
-      const bot = new MusicBot({});
-      const commandKey = 'unknown';
-      const args = [];
-      const message = {};
-
-      let error;
-
-      try {
-        bot.commandHandler(commandKey, args, message);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error.message).toBe(`Failed to handle command with key '${commandKey}'`);
-    });
+    // it('calls the run of a command for a given valid command key', () => {
+    //   const bot = new MusicBot({});
+    //   const args = [];
+    //   const message = {};
+    //
+    //   let error = null;
+    //
+    //   try {
+    //     bot.commandHandler(commandKeys.HELP_COMMAND, args, message);
+    //   } catch (e) {
+    //     error = e;
+    //   }
+    //
+    //   expect(error).toBeNull();
+    // });
+    //
+    // it('throws an Error when the command key is invalid', () => {
+    //   const bot = new MusicBot({});
+    //   const commandKey = 'unknown';
+    //   const args = [];
+    //   const message = {};
+    //
+    //   let error;
+    //
+    //   try {
+    //     bot.commandHandler(commandKey, args, message);
+    //   } catch (e) {
+    //     error = e;
+    //   }
+    //
+    //   expect(error.message).toBe(`Failed to handle command with key '${commandKey}'`);
+    // });
   });
 
   describe('onReady()', () => {
@@ -336,7 +292,6 @@ describe('MusicBot', () => {
     it('should reply to the user if the bot was mentioned', () => {
       const channelName = 'test-channel';
       const mockMessageHandler = jest.fn();
-      const mockSend = jest.fn();
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
@@ -345,19 +300,19 @@ describe('MusicBot', () => {
 
       const message = {
         author: { id: 456 },
-        channel: { name: channelName, send: mockSend },
+        channel: { name: channelName },
         isMentioned: () => true,
+        content: 'hi there',
       };
 
       bot.onMessage(message);
 
-      expect(mockSend.mock.calls.length).toBe(1);
+      expect(mockMessageHandler.mock.calls.length).toBe(1);
     });
 
     it("will not do anything when it's just a message in the channel", () => {
       const channelName = 'test-channel';
       const mockMessageHandler = jest.fn();
-      const mockSend = jest.fn();
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
@@ -366,20 +321,19 @@ describe('MusicBot', () => {
 
       const message = {
         author: { id: 456 },
-        channel: { name: channelName, send: mockSend },
+        channel: { name: channelName },
         isMentioned: () => false,
       };
 
       bot.onMessage(message);
 
-      expect(mockSend.mock.calls.length).toBe(0);
+      expect(mockMessageHandler.mock.calls.length).toBe(0);
     });
 
     describe('it should attempt to interpret the message as a command if the first character is the `COMMAND_PREFIX`', () => {
       it('should return the `UNKNOWN_COMMAND` message to the channel if the command was unknown', () => {
         const channelName = 'test-channel';
         const mockMessageHandler = jest.fn();
-        const mockSend = jest.fn();
 
         const bot = new MusicBot({});
         bot.messageHandler = mockMessageHandler;
@@ -388,15 +342,14 @@ describe('MusicBot', () => {
 
         const message = {
           author: { id: 456 },
-          channel: { name: channelName, send: mockSend },
+          channel: { name: channelName },
           content: '!unknownCommand',
           isMentioned: () => false,
         };
 
         bot.onMessage(message);
 
-        expect(mockMessageHandler.mock.calls[0][0]).toBe(messageConstants.UNKNOWN_COMMAND);
-        expect(mockSend.mock.calls.length).toBe(1);
+        expect(mockMessageHandler.mock.calls[0][1]).toBe('UNKNOWN_COMMAND');
       });
 
       it("should call the command handler with the command's alias, args and the message", () => {
@@ -417,7 +370,7 @@ describe('MusicBot', () => {
 
         bot.onMessage(message);
 
-        expect(mockCommandHandler.mock.calls[0][0]).toBe(commandKeys.HELP_COMMAND);
+        expect(mockCommandHandler.mock.calls[0][0]).toBe('help_command');
         expect(mockCommandHandler.mock.calls[0][1][0]).toBe('arg1');
         expect(mockCommandHandler.mock.calls[0][2]).toEqual(message);
       });
@@ -459,14 +412,14 @@ describe('MusicBot', () => {
     });
   });
 
-  describe('init()', () => {
+  describe('run()', () => {
     it('throws an Error if a `token` is not provided', () => {
       const bot = new MusicBot({});
 
       let result;
 
       try {
-        bot.init();
+        bot.run();
       } catch (e) {
         result = e;
       }
@@ -480,7 +433,7 @@ describe('MusicBot', () => {
       let result;
 
       try {
-        bot.init();
+        bot.run();
       } catch (e) {
         result = e;
       }
@@ -494,7 +447,7 @@ describe('MusicBot', () => {
       let result;
 
       try {
-        bot.init();
+        bot.run();
       } catch (e) {
         result = e;
       }
@@ -508,7 +461,7 @@ describe('MusicBot', () => {
       const mockFn = jest.fn();
       bot.bot.on = mockFn;
 
-      bot.init();
+      bot.run();
 
       expect(mockFn.mock.calls[0][0]).toBe('ready');
       expect(mockFn.mock.calls[0][1]).toBeInstanceOf(Function);
@@ -527,7 +480,7 @@ describe('MusicBot', () => {
       const mockFn = jest.fn();
       bot.bot.login = mockFn;
 
-      bot.init();
+      bot.run();
 
       expect(mockFn.mock.calls.length).toBe(1);
       expect(mockFn.mock.calls[0][0]).toBe(token);

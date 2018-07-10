@@ -1,13 +1,12 @@
 const dateFormat = require('dateformat');
 
-const { commandAliases } = require('./config/commands');
-
-const findCommandKeyByAlias = givenAlias => {
+const findCommandKeyByAlias = (commandDetails, givenAlias) => {
   let commandKey = null;
 
-  Object.keys(commandAliases).forEach(key => {
-    if (commandAliases[key].includes(givenAlias.toLowerCase())) {
+  Object.keys(commandDetails).forEach(key => {
+    if (commandDetails[key].aliases.includes(givenAlias.toLowerCase())) {
       commandKey = key;
+      return; // eslint-disable-line no-useless-return
     }
   });
 

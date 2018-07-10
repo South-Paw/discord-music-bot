@@ -1,10 +1,29 @@
-/* eslint-disable no-unused-vars */
+const { REPLY } = require('../../constants');
 
-const run = (bot, args, message) => {
-  console.log('set avatar command run!', args);
-};
+const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
 
-module.exports = {
+class SetAvatarCommand {
+  constructor(bot, args, message) {
+    this.bot = bot;
+    this.args = args;
+    this.message = message;
+  }
+
+  run() {
+    if (this.args[0] && this.args[0].match(urlRegex)) {
+      this.bot.bot.user
+        .setAvatar(this.args[0])
+        .then(() => this.bot.messageHandler(REPLY, 'SET_AVATAR_COMMAND_SUCCESS', this.message))
+        .catch(error => this.bot.messageHandler(REPLY, 'SET_AVATAR_COMMAND_ERROR', this.message, error));
+
+      return;
+    }
+
+    this.bot.messageHandler(REPLY, 'SET_AVATAR_COMMAND_INVALID_URL', this.message);
+  }
+}
+
+const info = {
   key: 'setAvatar_command',
   aliases: ['setavatar'],
   details: {
@@ -12,5 +31,6 @@ module.exports = {
     usage: 'setavatar <image url>',
     description: "Set the bot's avatar image to the given url (overrides the previous image).",
   },
-  run,
 };
+
+module.exports = { SetAvatarCommand, info };
