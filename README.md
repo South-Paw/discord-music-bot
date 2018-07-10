@@ -17,13 +17,9 @@
 
 If you manage to find any, please report them [here](https://github.com/South-Paw/discord-musicbot/issues) so they can be squashed.
 
----
-
 ## Features
 
 * Yes.
-
----
 
 ## 🤖 How do I use this?
 
@@ -61,8 +57,6 @@ and if you do or already have... reset it.
 
 1. todo
 
----
-
 ## 📦 Advanced Usage
 
 1. Create a new folder for the bot script
@@ -95,8 +89,6 @@ while (true) {
   }
 }
 ```
-
----
 
 ## License
 
