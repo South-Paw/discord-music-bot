@@ -1,12 +1,7 @@
+const Command = require('../Command');
 const { REPLY } = require('../../constants');
 
-class SetUsernameCommand {
-  constructor(bot, args, message) {
-    this.bot = bot;
-    this.args = args;
-    this.message = message;
-  }
-
+class SetUsernameCommand extends Command {
   run() {
     if (this.args.length >= 1) {
       this.bot.bot

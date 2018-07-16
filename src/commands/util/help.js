@@ -1,14 +1,9 @@
+const Command = require('../Command');
 const { DIRECT_MESSAGE } = require('../../constants');
 
 const MAX_ITEMS_PER_MESSAGE = 10;
 
-class HelpCommand {
-  constructor(bot, args, message) {
-    this.bot = bot;
-    this.args = args;
-    this.message = message;
-  }
-
+class HelpCommand extends Command {
   getSingleDetailBlock(commandDetails) {
     const prefix = this.bot.settings.preferences.COMMAND_PREFIX;
     const commandAliases = commandDetails.aliases.map(alias => `${prefix}${alias}`);

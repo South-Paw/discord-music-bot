@@ -1,14 +1,9 @@
+const Command = require('../Command');
 const { REPLY } = require('../../constants');
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
 
-class SetAvatarCommand {
-  constructor(bot, args, message) {
-    this.bot = bot;
-    this.args = args;
-    this.message = message;
-  }
-
+class SetAvatarCommand extends Command {
   run() {
     if (this.args[0] && this.args[0].match(urlRegex)) {
       this.bot.bot.user
