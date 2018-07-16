@@ -6,7 +6,7 @@ const defaultState = {
 };
 
 describe('MusicBot', () => {
-  describe('constructor()', () => {
+  xdescribe('constructor()', () => {
     // noop
   });
 
@@ -140,7 +140,7 @@ describe('MusicBot', () => {
     });
   });
 
-  describe('messageHandler()', () => {
+  xdescribe('messageHandler()', () => {
     // it('returns a message given a valid key and message', () => {
     //   const bot = new MusicBot({});
     //   const message = { member: { user: { toString: () => 'abc' } } };
@@ -167,7 +167,7 @@ describe('MusicBot', () => {
     // });
   });
 
-  describe('commandHandler()', () => {
+  xdescribe('commandHandler()', () => {
     // FIXME: this test needs to be improved... currently it doesn't assert anything.
     // It just calls the command and only fails if the command doesn't run...
     // it('calls the run of a command for a given valid command key', () => {

@@ -15,7 +15,7 @@ describe('Utilities', () => {
     });
   });
 
-  describe('getLoggerPrefix()', () => {
+  xdescribe('getLoggerPrefix()', () => {
     // noop
   });
 });
