@@ -185,6 +185,7 @@ class MusicBot {
         }
 
         this.commandHandler(commandAlias, params.slice(1), message);
+        return;
       }
 
       // If the message mentions the bot
