@@ -20,7 +20,7 @@ const deepmerge = require('deepmerge');
 
 const { defaultCommands, defaultCommandDetails } = require('./defaults/commands');
 const { defaultMessageStrings, messageFunctions } = require('./defaults/messages');
-const { defaultGlobalPermissions, defaultGroupPermissions, defaultUserPermissions } = require('./defaults/permissions');
+const { defaultGlobalPermissions, defaultGroupPermissions } = require('./defaults/permissions');
 const defaultPreferences = require('./defaults/preferences');
 
 const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } = require('./constants');
@@ -57,7 +57,7 @@ class MusicBot {
       permissions: {
         global: deepmerge(defaultGlobalPermissions, globalPermissions),
         groups: deepmerge(defaultGroupPermissions, groupPermissions),
-        users: deepmerge(defaultUserPermissions, usersPermissions),
+        users: usersPermissions,
       },
       preferences: deepmerge(defaultPreferences, preferences),
       debug,

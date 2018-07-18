@@ -1,7 +1,14 @@
-const defaultGlobalPermissions = {};
+const defaultGlobalPermissions = {
+  help_command: true,
+  setAvatar_command: false,
+  setUsername_command: false,
+};
 
-const defaultGroupPermissions = {};
+const defaultGroupPermissions = {
+  admin: {
+    setAvatar_command: true,
+    setUsername_command: true,
+  },
+};
 
-const defaultUserPermissions = {};
-
-module.exports = { defaultGlobalPermissions, defaultGroupPermissions, defaultUserPermissions };
+module.exports = { defaultGlobalPermissions, defaultGroupPermissions };
