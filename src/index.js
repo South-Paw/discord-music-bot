@@ -127,6 +127,17 @@ class MusicBot {
     }
   }
 
+  hasCommandPermission(userId, commandKey) {
+    const { users, groups, global } = this.settings.permissions;
+    const groupId = users[`${userId}`];
+
+    if (users[`${userId}`] && groups[`${groupId}`]) {
+      return !!groups[`${groupId}`][`${commandKey}`];
+    }
+
+    return !!global[`${commandKey}`];
+  }
+
   commandHandler(key, args, message) {
     const CommandClass = this.settings.commands[key];
 
@@ -135,11 +146,17 @@ class MusicBot {
       return;
     }
 
-    // TODO: check user has command permissions before calling it
-
     const Command = new CommandClass(this, args, message);
 
     this.logger(LOG_INFO, `'${message.member.displayName}' called '${key}' with ${JSON.stringify(args)}`);
+
+    if (!this.hasCommandPermission(message.member.id, key)) {
+      this.logger(LOG_INFO, `'${message.member.displayName}' does not have permission for '${key}'`);
+
+      this.messageHandler(REPLY, 'NO_PERMISSION', message);
+
+      return;
+    }
 
     Command.run();
   }

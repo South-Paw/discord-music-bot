@@ -5,6 +5,7 @@ const format = require('string-format');
 const defaultMessageStrings = {
   BOT_MENTIONED: 'Hey {}, you should try `{}help` for a list of commands. :ok_hand:',
   UNKNOWN_COMMAND: "Hmmm. I couldn't find that command... did you mistype it?",
+  NO_PERMISSION: "You don't have permission for that command.",
   HELP_COMMAND_UNKNOWN: "I can't see a command or alias for that one... why don't you try `{}help`?",
   HELP_COMMAND_WELCOME_DM: "Here's a list of all the commands you can use:",
   HELP_COMMAND_DM: true, // Message is formatted within the command class.
@@ -20,6 +21,7 @@ const messageFunctions = {
   /* eslint-disable prettier/prettier */
   BOT_MENTIONED: (string, bot, message) => format(string, message.member.user.toString(), bot.settings.preferences.COMMAND_PREFIX),
   UNKNOWN_COMMAND: (string, bot, message) => string,
+  NO_PERMISSION: (string, bot, message) => string,
   HELP_COMMAND_UNKNOWN: (string, bot, message) => format(string, bot.settings.preferences.COMMAND_PREFIX),
   HELP_COMMAND_WELCOME_DM: (string, bot, message) => string,
   HELP_COMMAND_DM: (string, bot, message, acutualMessage) => acutualMessage,
