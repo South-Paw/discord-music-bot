@@ -17,6 +17,10 @@ const cliOptions = {
       type: 'string',
       alias: 'c',
     },
+    admin: {
+      type: 'string',
+      alias: 'a',
+    },
     debug: {
       type: 'boolean',
       alias: 'd',
@@ -33,6 +37,7 @@ const cli = meow(
       --token, -t       Your Discord token.
       --server, -s      The id of the server you want to join.
       --channel, -c     The id of the channel you want to listen for commands in.
+      --admin, -a       The user id of a Discord account that should have admin permissions. Pass the arg multiple times to add multiple users.
 
     Optional Arguments:
       --debug, -d       Enable debug mode (aka, way more logging).
@@ -40,15 +45,22 @@ const cli = meow(
   cliOptions,
 );
 
-if (cli.flags.token) {
-  // load config from file optionally...?
+const users = {};
 
-  const musicBot = new MusicBot({
-    token: cli.flags.token,
-    serverId: cli.flags.server,
-    textChannelId: cli.flags.channel,
-    debug: cli.flags.debug,
+if (Array.isArray(cli.flags.admin)) {
+  cli.flags.admin.forEach(id => {
+    users[id] = true;
   });
-
-  musicBot.run();
+} else if (typeof cli.flags.admin === 'string') {
+  users[cli.flags.admin] = true;
 }
+
+const musicBot = new MusicBot({
+  token: cli.flags.token,
+  serverId: cli.flags.server,
+  textChannelId: cli.flags.channel,
+  permissions: { users },
+  debug: cli.flags.debug,
+});
+
+musicBot.run();
