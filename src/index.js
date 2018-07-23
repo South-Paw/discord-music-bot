@@ -146,8 +146,6 @@ class MusicBot {
       return;
     }
 
-    const Command = new CommandClass(this, args, message);
-
     this.logger(LOG_INFO, `'${message.member.displayName}' called '${key}' with ${JSON.stringify(args)}`);
 
     if (!this.hasCommandPermission(message.member.id, key)) {
@@ -158,6 +156,7 @@ class MusicBot {
       return;
     }
 
+    const Command = new CommandClass(this, args, message);
     Command.run();
   }
 
