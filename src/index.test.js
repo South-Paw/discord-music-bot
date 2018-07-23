@@ -1,15 +1,12 @@
 const MusicBot = require('./index');
-const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG } = require('./constants');
+const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } = require('./constants');
+const { defaultMessageStrings } = require('./defaults/messages');
 
 const defaultState = {
   activeTextChannel: null,
 };
 
 describe('MusicBot', () => {
-  xdescribe('constructor()', () => {
-    // noop
-  });
-
   describe('isDebug()', () => {
     it('returns false by default', () => {
       const bot = new MusicBot({});
@@ -140,69 +137,80 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('messageHandler()', () => {
-    // it('returns a message given a valid key and message', () => {
-    //   const bot = new MusicBot({});
-    //   const message = { member: { user: { toString: () => 'abc' } } };
-    //
-    //   expect(bot.messageHandler(BOT_MENTIONED, message)).toBe(
-    //     'Hey abc, you should try `!` for a list of commands. :thumbsup:',
-    //   );
-    // });
-    //
-    // it("throws an Error when the key's invalid", () => {
-    //   const bot = new MusicBot({});
-    //   const message = { member: { user: { toString: () => 'abc' } } };
-    //   const messageKey = 'unknown';
-    //
-    //   let error;
-    //
-    //   try {
-    //     bot.messageHandler(messageKey, message);
-    //   } catch (e) {
-    //     error = e;
-    //   }
-    //
-    //   expect(error.message).toBe(`Failed to handle message with key '${messageKey}'`);
-    // });
+  describe('messageHandler()', () => {
+    it('logs an error if the given key is not found in `messageString`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.logger = mockFn;
+
+      bot.messageHandler(SEND, 'TEST_STRING', {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find message (string or function) with key 'TEST_STRING'");
+    });
+
+    it('logs an error if the given key is not found in `messageFunction`', () => {
+      const mockFn = jest.fn();
+
+      const TEST_STRING = 'test string';
+      const bot = new MusicBot({ messageStrings: { TEST_STRING } });
+
+      bot.logger = mockFn;
+
+      bot.messageHandler(SEND, 'TEST_STRING', {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find message (string or function) with key 'TEST_STRING'");
+    });
+
+    it('calls send on a message when type = `SEND`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(SEND, 'UNKNOWN_COMMAND', { channel: { send: mockFn } });
+
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
+
+    it('calls send on a message when type = `REPLY`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(REPLY, 'UNKNOWN_COMMAND', { reply: mockFn });
+
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
+
+    it('calls send on a message when type = `DIRECT_MESSAGE`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(DIRECT_MESSAGE, 'UNKNOWN_COMMAND', {
+        member: { createDM: () => ({ then: fn => fn({ send: mockFn }) }) },
+      });
+
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
+
+    it('logs an error when the type is unknown', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.logger = mockFn;
+
+      bot.messageHandler('TEST_TYPE', 'UNKNOWN_COMMAND', {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Unknown message return type 'TEST_TYPE'");
+    });
   });
 
-  xdescribe('commandHandler()', () => {
-    // FIXME: this test needs to be improved... currently it doesn't assert anything.
-    // It just calls the command and only fails if the command doesn't run...
-    // it('calls the run of a command for a given valid command key', () => {
-    //   const bot = new MusicBot({});
-    //   const args = [];
-    //   const message = {};
-    //
-    //   let error = null;
-    //
-    //   try {
-    //     bot.commandHandler(commandKeys.HELP_COMMAND, args, message);
-    //   } catch (e) {
-    //     error = e;
-    //   }
-    //
-    //   expect(error).toBeNull();
-    // });
-    //
-    // it('throws an Error when the command key is invalid', () => {
-    //   const bot = new MusicBot({});
-    //   const commandKey = 'unknown';
-    //   const args = [];
-    //   const message = {};
-    //
-    //   let error;
-    //
-    //   try {
-    //     bot.commandHandler(commandKey, args, message);
-    //   } catch (e) {
-    //     error = e;
-    //   }
-    //
-    //   expect(error.message).toBe(`Failed to handle command with key '${commandKey}'`);
-    // });
-  });
+  xdescribe('hasCommandPermission()', () => {});
+
+  xdescribe('commandHandler()', () => {});
 
   describe('onReady()', () => {
     it("throws an Error if the `serverId` isn't resolvable", () => {

@@ -44,7 +44,7 @@ and if you do or already have... reset it.
 
 1. Install [Node.js](https://nodejs.org/en/) (Version 8 or above)
 2. Open a Powershell or Command Prompt window
-  * **Tip:** Start > Run > type `powershell.exe` OR type `cmd.exe` > Enter
+    * **Tip:** Start > Run > type `powershell.exe` OR type `cmd.exe` > Enter
 3. Type `npm i -g discord-musicbot` to install the bot.
 4. Run the bot from the same window by typing `discord-musicbot -t YOUR_TOKEN -s YOUR_SERVER_ID -c YOUR_CHANNEL_ID`
 5. When you want to start the bot again (after a restart or shutdown), just run the command in step 4.
