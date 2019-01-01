@@ -33,30 +33,25 @@
     "lint": "eslint ./src",
     "prepublishOnly": "npm run lint && npm run test",
     "prettier": "prettier --write \"src/**/*.js\"",
-    "test": "jest",
-    "test/coverage": "jest --coverage"
+    "test": "jest"
   },
   "dependencies": {
     "dateformat": "^3.0.3",
-    "deepmerge": "^2.1.1",
-    "discord.js": "^11.3.2",
-    "ffmpeg-binaries": "^4.0.0",
+    "deepmerge": "^3.0.0",
+    "discord.js": "^11.4.2",
     "meow": "^5.0.0",
-    "node-opus": "^0.3.0",
-    "string-format": "^2.0.0",
-    "url-parse": "^1.4.1",
-    "ytdl-core": "^0.21.1"
+    "string-format": "^2.0.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
-    "eslint": "^5.0.1",
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jest": "^21.17.0",
-    "eslint-plugin-prettier": "^2.6.1",
-    "jest": "^23.2.0",
-    "prettier": "^1.13.7"
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3"
   },
   "engines": {
     "node": ">=8.0.0"
