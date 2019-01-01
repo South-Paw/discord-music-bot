@@ -1,5 +1,5 @@
 {
-  "name": "discord-musicbot",
+  "name": "@south-paw/discord-music-bot",
   "version": "0.1.5",
   "description": "A music bot for Discord servers, self-hosted, easy to use and extendable.",
   "keywords": [
@@ -55,5 +55,8 @@
   },
   "engines": {
     "node": ">=8.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
