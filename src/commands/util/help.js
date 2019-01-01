@@ -25,7 +25,7 @@ class HelpCommand extends Command {
 
     Object.keys(this.bot.settings.commandDetails).forEach(key => {
       if (detailStrings.length === MAX_ITEMS_PER_MESSAGE) {
-        this.bot.messageHandler(DIRECT_MESSAGE, 'HELP_COMMAND_DM_', this.message, detailStrings);
+        this.bot.messageHandler(DIRECT_MESSAGE, 'HELP_COMMAND_DM', this.message, detailStrings);
         detailStrings = [];
       }
 
