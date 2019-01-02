@@ -208,9 +208,62 @@ describe('MusicBot', () => {
     });
   });
 
-  xdescribe('hasCommandPermission()', () => {});
+  describe('hasCommandPermission()', () => {
+    it('uses the global permissions if the `userId` is not in the users list', () => {
+      const bot = new MusicBot({});
 
-  xdescribe('commandHandler()', () => {});
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(false);
+    });
+
+    it("uses the global permissions if the `userId` has a group but the group doesn't exist", () => {
+      const bot = new MusicBot({
+        permissions: {
+          users: {
+            '1234': 'agroup',
+          },
+        },
+      });
+
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(false);
+    });
+
+    it('returns the command permission for the group the given `userId` belongs to', () => {
+      const bot = new MusicBot({
+        permissions: {
+          users: {
+            '1234': 'agroup',
+          },
+          groups: {
+            agroup: {
+              setUsername_command: true,
+            },
+          },
+        },
+      });
+
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(true);
+    });
+  });
+
+  describe('commandHandler()', () => {
+    it('logs an error if there is no command for the given key', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.logger = mockFn;
+
+      bot.commandHandler('unknown_key', [], {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find command with key 'unknown_key'");
+    });
+
+    xit('logs a message and args used if the command exists', () => {});
+
+    xit("logs a message if the user doesn't have permission for the command", () => {});
+
+    xit('runs the command if everything is okay', () => {});
+  });
 
   describe('onReady()', () => {
     it("throws an Error if the `serverId` isn't resolvable", () => {
