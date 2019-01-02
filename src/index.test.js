@@ -1,754 +1,550 @@
-/* eslint-env jest */
-const { RichEmbed } = require('discord.js');
-const format = require('string-format');
-
-const defaultLogging = require('./config/logging.js');
-const defaultReplies = require('./config/replies.js');
-const defaultSettings = require('./config/settings.js');
-const defaultPermissions = require('./config/permissions.js');
-
-const HELP_COMMAND = require('./commands/utility/help.js');
-const SET_AVATAR_COMMAND = require('./commands/utility/setavatar.js');
-
 const MusicBot = require('./index');
+const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } = require('./constants');
+const { defaultMessageStrings } = require('./defaults/messages');
+
+const defaultState = {
+  activeTextChannel: null,
+};
 
 describe('MusicBot', () => {
-  describe('getLogMsg()', () => {
-    describe('When a log message is required', () => {
-      test('it can be found given a valid key', () => {
-        const expectedMessage = defaultLogging.connected;
-        const bot = new MusicBot({});
-
-        expect(bot.getLogMsg('connected')).toBe(expectedMessage);
-      });
-
-      test('it can be found for a key the user overrode', () => {
-        const customMessage = 'Custom connected message.';
-        const bot = new MusicBot({ logging: { connected: customMessage } });
-
-        expect(bot.getLogMsg('connected')).toBe(customMessage);
-      });
-
-      test('it will return undefined when the key is not found', () => {
-        const bot = new MusicBot({});
-
-        expect(bot.getLogMsg('nonexistent')).toBe(undefined);
-      });
-    });
-  });
-
-  describe('getReplyMsg()', () => {
-    describe('When a reply message is required', () => {
-      const generalGroup = 'general';
-      const unknownCommand = 'unknownCommand';
-
-      test('it can be found for a given group and key', () => {
-        const message = defaultReplies.general.unknownCommand;
-        const bot = new MusicBot({});
-
-        expect(bot.getReplyMsg(generalGroup, unknownCommand)).toBe(message);
-      });
-
-      test('it can be found for a given group and key the user overrode', () => {
-        const message = 'Custom unknown command message.';
-        const bot = new MusicBot({ replies: { [generalGroup]: { [unknownCommand]: message } } });
-
-        expect(bot.getReplyMsg(generalGroup, unknownCommand)).toBe(message);
-      });
-
-      test('it will return undefined when the key is not found in the group', () => {
-        const bot = new MusicBot({});
-
-        expect(bot.getReplyMsg(generalGroup, 'unknown')).toBe(undefined);
-      });
-    });
-  });
-
-  describe('getSetting()', () => {
-    describe('When a setting is required', () => {
-      test('it can be found given a valid key', () => {
-        const expectedSetting = defaultSettings.commandPrefix;
-        const bot = new MusicBot({});
-
-        expect(bot.getSetting('commandPrefix')).toBe(expectedSetting);
-      });
-
-      test('it can be found for a key the user overrode', () => {
-        const customSetting = '~';
-        const bot = new MusicBot({ settings: { commandPrefix: customSetting } });
-
-        expect(bot.getSetting('commandPrefix')).toBe(customSetting);
-      });
-
-      test('it will return undefined when the key is not found', () => {
-        const bot = new MusicBot({});
-
-        expect(bot.getSetting('nonexistent')).toBe(undefined);
-      });
-    });
-  });
-
-  describe('setActiveVoiceConnection()', () => {
-    test('the default is a null state', () => {
+  describe('isDebug()', () => {
+    it('returns false by default', () => {
       const bot = new MusicBot({});
 
-      expect(bot.activeVoiceChannel).toBe(null);
-      expect(bot.activeVoiceConnection).toBe(null);
+      expect(bot.isDebug()).toBe(false);
     });
 
-    test('a new voice connection and channel can be set', () => {
-      const bot = new MusicBot({});
-      const objectA = { a: 'a' };
-      const objectB = { b: 'b' };
+    it('returns true if set in the config', () => {
+      const bot = new MusicBot({ debug: true });
 
-      bot.setActiveVoiceConnection(objectA, objectB);
-
-      expect(bot.activeVoiceChannel).toBe(objectA);
-      expect(bot.activeVoiceConnection).toBe(objectB);
+      expect(bot.isDebug()).toBe(true);
     });
   });
 
-  describe('resetBotState()', () => {
-    test('clears bot state back to default', () => {
-      const bot = new MusicBot({});
+  describe('logger()', () => {
+    const noFunc = () => '';
 
-      bot.setActiveVoiceConnection({ q: 'w' }, { z: 'x' });
-      bot.voiceHandler = 'voiceHandler';
-      bot.nowPlaying = 'nowPlaying';
-      bot.playbackPaused = true;
-      bot.playbackStopped = true;
-      bot.playlistQueue = ['a', 'b', 'c'];
+    it('defaults to `console.log`', () => {
+      const spy = jest.spyOn(global.console, 'log');
 
-      bot.resetBotState();
-
-      expect(bot.activeVoiceChannel).toBe(null);
-      expect(bot.activeVoiceConnection).toBe(null);
-      expect(bot.voiceHandler).toBe(null);
-      expect(bot.nowPlaying).toBe(null);
-      expect(bot.playbackPaused).toBe(false);
-      expect(bot.playbackStopped).toBe(false);
-      expect(bot.playlistQueue.length).toBe(0);
-    });
-  });
-
-  describe('setBotNowPlaying()', () => {
-    test('the now playing string can be cleared', () => {
-      const bot = new MusicBot({});
-      const nowPlaying = null;
-
-      bot.bot.user = {
-        presence: { game: 'hello world!' },
-        setActivity: (string) => { bot.bot.user.presence = { game: string }; },
-      };
-
-      bot.setBotNowPlaying(nowPlaying);
-
-      expect(bot.bot.user.presence.game).toBe(nowPlaying);
-    });
-
-    test('the now playing string is set', () => {
-      const bot = new MusicBot({});
-      const nowPlaying = 'test now playing';
-
-      bot.bot.user = {
-        presence: { game: null },
-        setActivity: (string) => { bot.bot.user.presence = { game: string }; },
-      };
-
-      bot.setBotNowPlaying(nowPlaying);
-
-      expect(bot.bot.user.presence.game).toBe(nowPlaying);
-    });
-  });
-
-  describe('isQueueEmpty()', () => {
-    test('returns true after the queue has items added', () => {
-      const bot = new MusicBot({});
-      bot.playlistQueue = ['a', 'b', 'c'];
-
-      expect(bot.isQueueEmpty()).toBe(false);
-    });
-
-    test('returns false if the queue does not have items', () => {
+      const testMsg = 'test';
       const bot = new MusicBot({});
 
-      expect(bot.isQueueEmpty()).toBe(true);
-    });
-  });
+      bot.logger(testMsg, testMsg, noFunc);
 
-  describe('isVoiceHandlerSet()', () => {
-    test('returns true after the voice handler has been set', () => {
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
+    });
+
+    it('uses `console.info` for `LOG_INFO`', () => {
+      const spy = jest.spyOn(global.console, 'info');
+
+      const testMsg = 'test';
       const bot = new MusicBot({});
-      bot.voiceHandler = 'voiceHandler';
 
-      expect(bot.isVoiceHandlerSet()).toBe(true);
+      bot.logger(LOG_INFO, testMsg, noFunc);
+
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
 
-    test('returns false if the voice handler has not been set', () => {
+    it('uses `console.warn` for `LOG_WARN`', () => {
+      const spy = jest.spyOn(global.console, 'warn');
+
+      const testMsg = 'test';
       const bot = new MusicBot({});
 
-      expect(bot.isVoiceHandlerSet()).toBe(false);
-    });
-  });
+      bot.logger(LOG_WARN, testMsg, noFunc);
 
-  describe('isPlaybackPaused() and setPlaybackPaused()', () => {
-    test('allows the playback paused state to be set with setPlaybackPaused()', () => {
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
+    });
+
+    it('uses `console.error` for `LOG_ERROR`', () => {
+      const spy = jest.spyOn(global.console, 'error');
+
+      const testMsg = 'test';
       const bot = new MusicBot({});
-      bot.setPlaybackPaused(true);
 
-      expect(bot.isPlaybackPaused()).toBe(true);
+      bot.logger(LOG_ERROR, testMsg, noFunc);
+
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
-  });
 
-  describe('isPlaybackStopped() and setPlaybackStopped()', () => {
-    test('allows the playback stopped state to be set with setPlaybackStopped()', () => {
+    it('uses `console.debug` for `LOG_DEBUG` when `isDebug()=true`', () => {
+      const spy = jest.spyOn(global.console, 'debug');
+
+      const testMsg = 'test';
+      const bot = new MusicBot({ debug: true });
+
+      bot.logger(LOG_DEBUG, testMsg, noFunc);
+
+      expect(spy).toHaveBeenCalledWith(noFunc(), testMsg);
+
+      spy.mockReset();
+      spy.mockRestore();
+    });
+
+    it("doesn't call `console.debug` for `LOG_DEBUG` when `isDebug=false`", () => {
+      const spy = jest.spyOn(global.console, 'debug');
+
+      const testMsg = 'aNewTest';
       const bot = new MusicBot({});
-      bot.setPlaybackStopped(true);
 
-      expect(bot.isPlaybackStopped()).toBe(true);
+      bot.logger(LOG_DEBUG, testMsg, noFunc);
+
+      expect(spy).toHaveBeenCalledTimes(0);
+
+      spy.mockReset();
+      spy.mockRestore();
     });
   });
 
-  describe('getPermissionGroup()', () => {
-    describe('When a userId is given', () => {
-      test('it will return false if they have no corresponding user group', () => {
-        const userId = '456def';
-        const bot = new MusicBot({});
+  describe('setState()', () => {
+    it('merges the `newState` into the existing state', () => {
+      const bot = new MusicBot({});
 
-        expect(bot.getPermissionGroup(userId)).toBe(false);
-      });
+      expect(bot.state).toEqual(defaultState);
 
-      test('it will return the user\'s corresponding group when the user was set in the config', () => {
-        const userId = '123abc';
-        const group = 'admin';
-        const bot = new MusicBot({ permissions: { users: { [userId]: group } } });
+      bot.setState({ music: 'bot' });
 
-        expect(bot.getPermissionGroup(userId)).toBe(group);
-      });
+      expect(bot.state).toEqual({ ...defaultState, music: 'bot' });
     });
   });
 
-  describe('getGroupPermissions()', () => {
-    describe('When a user object and groupId are given', () => {
-      test('it will return the permissions for that group (after being merged into the global group permissions)', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
+  describe('resetState()', () => {
+    it("resets the bot's state back to the default", () => {
+      const bot = new MusicBot({});
 
-        const groupId = 'group1';
+      const initialState = bot.state;
 
-        const config = {
-          permissions: {
-            groups: {
-              [groupId]: {
-                help: false,
-                setavatar: true,
-              },
-            },
-            users: {
-              [user.id]: groupId,
-            },
-          },
-        };
+      bot.setState({ thing: 'test' });
 
-        const bot = new MusicBot(config);
+      expect(bot.state).toEqual({ ...defaultState, thing: 'test' });
 
-        const expected = Object.assign(
-          {},
-          defaultPermissions.global,
-          config.permissions.groups[groupId],
-        );
+      bot.resetState();
 
-        expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
-      });
-
-      test('it will return the global permissions for an undefined group if no custom ones were supplied', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
-
-        const groupId = 'group1';
-
-        const bot = new MusicBot({});
-
-        const expected = Object.assign(
-          {},
-          defaultPermissions.global,
-          defaultPermissions.groups[groupId],
-        );
-
-        expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
-      });
-
-      test('it will return the default admin permissions if the user was set to the default admin group', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
-
-        const groupId = 'admin';
-
-        const bot = new MusicBot({});
-
-        const expected = Object.assign(
-          {},
-          defaultPermissions.global,
-          defaultPermissions.groups[groupId],
-        );
-
-        expect(bot.getGroupPermissions(user, groupId)).toEqual(expected);
-      });
-
-      test('it will return the default global permissions if the user was not set to any groups', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
-
-        const groupId = false;
-
-        const bot = new MusicBot({});
-
-        expect(bot.getGroupPermissions(user, groupId)).toBe(defaultPermissions.global);
-      });
+      expect(bot.state).toEqual(initialState);
     });
   });
 
-  describe('checkPermissions()', () => {
-    describe('When a user object and command object are given', () => {
-      test('if the user does not have permission to the command, it will return false', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
+  describe('messageHandler()', () => {
+    it('logs an error if the given key is not found in `messageString`', () => {
+      const mockFn = jest.fn();
 
-        const groupId = 'group1';
+      const bot = new MusicBot({});
 
-        const config = {
-          permissions: {
-            groups: {
-              [groupId]: {
-                help: false,
-                setavatar: true,
-              },
-            },
-            users: {
-              [user.id]: groupId,
-            },
-          },
-        };
+      bot.logger = mockFn;
 
-        const bot = new MusicBot(config);
+      bot.messageHandler(SEND, 'TEST_STRING', {});
 
-        expect(bot.checkPermissions(user, HELP_COMMAND)).toBe(false);
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find message (string or function) with key 'TEST_STRING'");
+    });
+
+    it('logs an error if the given key is not found in `messageFunction`', () => {
+      const mockFn = jest.fn();
+
+      const TEST_STRING = 'test string';
+      const bot = new MusicBot({ messageStrings: { TEST_STRING } });
+
+      bot.logger = mockFn;
+
+      bot.messageHandler(SEND, 'TEST_STRING', {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find message (string or function) with key 'TEST_STRING'");
+    });
+
+    it('calls send on a message when type = `SEND`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(SEND, 'UNKNOWN_COMMAND', { channel: { send: mockFn } });
+
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
+
+    it('calls send on a message when type = `REPLY`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(REPLY, 'UNKNOWN_COMMAND', { reply: mockFn });
+
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
+
+    it('calls send on a message when type = `DIRECT_MESSAGE`', () => {
+      const mockFn = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.messageHandler(DIRECT_MESSAGE, 'UNKNOWN_COMMAND', {
+        member: { createDM: () => ({ then: fn => fn({ send: mockFn }) }) },
       });
 
-      test('if the user does have permission to the command, it will return true', () => {
-        const user = {
-          id: '123456789',
-          user: {
-            username: '123abc',
-          },
-        };
+      expect(mockFn.mock.calls[0][0]).toBe(defaultMessageStrings.UNKNOWN_COMMAND);
+    });
 
-        const groupId = 'group1';
+    it('logs an error when the type is unknown', () => {
+      const mockFn = jest.fn();
 
-        const config = {
-          permissions: {
-            groups: {
-              [groupId]: {
-                help: false,
-                setavatar: true,
-              },
-            },
-            users: {
-              [user.id]: groupId,
-            },
-          },
-        };
+      const bot = new MusicBot({});
 
-        const bot = new MusicBot(config);
+      bot.logger = mockFn;
 
-        expect(bot.checkPermissions(user, SET_AVATAR_COMMAND)).toBe(true);
-      });
+      bot.messageHandler('TEST_TYPE', 'UNKNOWN_COMMAND', {});
+
+      expect(mockFn.mock.calls[0][1]).toBe("Unknown message return type 'TEST_TYPE'");
     });
   });
 
-  describe('findCommand()', () => {
-    describe('When a user invokes a command and it needs to be searched for', () => {
-      test('it can be found if the alias is valid', () => {
-        const commandAlias = 'help';
-        const bot = new MusicBot({});
+  describe('hasCommandPermission()', () => {
+    it('uses the global permissions if the `userId` is not in the users list', () => {
+      const bot = new MusicBot({});
 
-        expect(bot.findCommand(commandAlias)).toBe(HELP_COMMAND);
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(false);
+    });
+
+    it("uses the global permissions if the `userId` has a group but the group doesn't exist", () => {
+      const bot = new MusicBot({
+        permissions: {
+          users: {
+            '1234': 'agroup',
+          },
+        },
       });
 
-      test('it will return false if the alias was invalid', () => {
-        const commandAlias = 'blah';
-        const bot = new MusicBot({});
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(false);
+    });
 
-        expect(bot.findCommand(commandAlias)).toBe(false);
+    it('returns the command permission for the group the given `userId` belongs to', () => {
+      const bot = new MusicBot({
+        permissions: {
+          users: {
+            '1234': 'agroup',
+          },
+          groups: {
+            agroup: {
+              setUsername_command: true,
+            },
+          },
+        },
       });
+
+      expect(bot.hasCommandPermission('1234', 'setUsername_command')).toBe(true);
     });
   });
 
-  describe('handleCommand()', () => {
-    describe('When a user invokes a command', () => {
-      test('if it had arguments then they are passed to the command', () => {
-        let response;
+  describe('commandHandler()', () => {
+    it('logs an error if there is no command for the given key', () => {
+      const mockFn = jest.fn();
 
-        const expectedEmbed = HELP_COMMAND.infoToEmbed('!', HELP_COMMAND.info);
+      const bot = new MusicBot({});
 
-        const message = {
-          content: '!help help',
-          reply: (text) => {
-            response = text;
-          },
-          member: {
-            id: '123456789',
-            user: {
-              username: '123abc',
-            },
-          },
-        };
+      bot.logger = mockFn;
 
-        const groupId = 'group1';
+      bot.commandHandler('unknown_key', [], {});
 
-        const config = {
-          permissions: {
-            groups: {
-              [groupId]: {
-                help: true,
-              },
-            },
-            users: {
-              [message.member.id]: groupId,
-            },
-          },
-        };
-
-        const bot = new MusicBot(config);
-
-        bot.handleCommand(message);
-
-        expect(response.embed).toBeInstanceOf(RichEmbed);
-        expect(response.embed.description).toBe(expectedEmbed.description);
-      });
-
-      describe('if the command is invalid', () => {
-        test('then a reply to the user with an unknown command message is sent', () => {
-          let response;
-
-          const message = {
-            content: '!abc',
-            reply: (text) => {
-              response = text;
-            },
-            member: {
-              id: '123456789',
-              user: {
-                username: '123abc',
-              },
-            },
-          };
-
-          const groupId = 'group1';
-
-          const config = {
-            permissions: {
-              groups: {
-                [groupId]: {
-                  help: true,
-                },
-              },
-              users: {
-                [message.member.id]: groupId,
-              },
-            },
-          };
-
-          const bot = new MusicBot(config);
-
-          bot.handleCommand(message);
-
-          expect(response).toBe(defaultReplies.general.unknownCommand);
-        });
-      });
-
-      describe('if the command is valid', () => {
-        test('and the given the user has permissions to use it, it is run', () => {
-          let response;
-
-          const message = {
-            content: '!skip',
-            reply: (text) => {
-              response = text;
-            },
-            member: {
-              id: '123456789',
-              user: {
-                username: '123abc',
-              },
-            },
-          };
-
-          const groupId = 'group1';
-
-          const config = {
-            permissions: {
-              groups: {
-                [groupId]: {
-                  help: true,
-                },
-              },
-              users: {
-                [message.member.id]: groupId,
-              },
-            },
-          };
-
-          const bot = new MusicBot(config);
-
-          bot.handleCommand(message);
-
-          expect(response).toBe(defaultReplies.skipCommand.notConnectedToVoice);
-        });
-
-        test('but the given user does not have permission to use it, then it replies with a no permission message', () => {
-          let response;
-
-          const message = {
-            content: '!setavatar thisimageurl',
-            reply: (text) => {
-              response = text;
-            },
-            member: {
-              id: '123456789',
-              user: {
-                username: '123abc',
-              },
-            },
-          };
-
-          const groupId = 'group1';
-
-          const config = {
-            permissions: {
-              groups: {
-                [groupId]: {
-                  help: true,
-                },
-              },
-              users: {
-                [message.member.id]: groupId,
-              },
-            },
-          };
-
-          const bot = new MusicBot(config);
-
-          bot.handleCommand(message);
-
-          expect(response).toBe(defaultReplies.general.noPermission);
-        });
-      });
+      expect(mockFn.mock.calls[0][1]).toBe("Failed to find command with key 'unknown_key'");
     });
+
+    xit('logs a message and args used if the command exists', () => {});
+
+    xit("logs a message if the user doesn't have permission for the command", () => {});
+
+    xit('runs the command if everything is okay', () => {});
   });
 
-  xdescribe('playNextSong()', () => {
-  });
+  describe('onReady()', () => {
+    it("throws an Error if the `serverId` isn't resolvable", () => {
+      const serverId = 'test';
+      const bot = new MusicBot({ serverId });
 
-  xdescribe('queueSpotifyPlaylist()', () => {
-  });
+      let result;
 
-  xdescribe('queueSpotifyTrack()', () => {
-  });
+      try {
+        bot.onReady();
+      } catch (e) {
+        result = e;
+      }
 
-  xdescribe('queueYoutubePlaylist()', () => {
-  });
+      expect(result.message).toBe(`Failed to connect to serverId '${serverId}'`);
+    });
 
-  xdescribe('queueYoutubeVideo()', () => {
-  });
+    it("throws an Error if the textChannelId isn't in the `server.channels`", () => {
+      const textChannelId = 'test';
+      const bot = new MusicBot({ serverId: 'test', textChannelId });
 
-  xdescribe('onReady()', () => {
-    describe('When the bot is started and ready', () => {
-      test('it connects to the given serverId', () => {
-        expect(false).toBe(true);
-      });
+      bot.bot.guilds.get = () => ({ channels: [] });
 
-      test('it connects to the given textChannelId', () => {
-        expect(false).toBe(true);
-      });
+      let result;
 
-      test('it makes a call to clear the set game', () => {
-        expect(false).toBe(true);
-      });
+      try {
+        bot.onReady();
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe(`Failed to find textChannelId '${textChannelId}'`);
+    });
+
+    it('will log a success message when it can connect', () => {
+      const textChannelId = 'test';
+      const bot = new MusicBot({ serverId: 'test', textChannelId });
+
+      bot.bot.guilds.get = () => ({ channels: [{ id: textChannelId, type: 'text' }] });
+
+      const mockFn = jest.fn();
+      bot.logger = mockFn;
+
+      bot.onReady();
+
+      expect(mockFn.mock.calls.length).toBe(1);
     });
   });
 
   describe('onMessage()', () => {
-    describe('When the bot receives a message', () => {
-      test('it doesn\'t reply if it was it\'s own message', () => {
-        const botId = 'itme123';
-        const channelName = 'channelname123';
+    it("should not reply to it's own messages", () => {
+      const botUserId = 123;
+      const channelName = 'test-channel';
+      const mockFn = jest.fn();
 
-        let response;
+      const bot = new MusicBot({});
+      bot.bot = { user: { id: botUserId } };
+      bot.setState({ activeTextChannel: { name: channelName } });
 
-        const message = {
-          content: 'my own message',
-          reply: (text) => {
-            response = text;
-          },
-          author: {
-            id: botId,
-          },
-          channel: {
-            name: channelName,
-          },
-        };
+      const message = {
+        author: { id: botUserId },
+        channel: { name: channelName, send: mockFn },
+      };
 
-        const bot = new MusicBot({});
+      bot.onMessage(message);
 
-        bot.bot.user = { id: botId };
-        bot.activeTextChannel = { name: channelName };
+      expect(mockFn.mock.calls.length).toBe(0);
+    });
 
-        bot.onMessage(message);
+    it('should not reply to messages in other channels', () => {
+      const mockFn = jest.fn();
 
-        expect(response).toBeUndefined();
-      });
+      const bot = new MusicBot({});
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: 'test-channel' } });
 
-      test('it doesn\'t reply if it wasn\'t in the commands channel', () => {
-        const userId = 'itme456';
-        const botId = 'itme123';
-        const channelNameA = 'channelname123';
-        const channelNameB = 'channelname456';
+      const message = {
+        author: { id: 456 },
+        channel: { name: 'test-channel2', send: mockFn },
+      };
 
-        let response = 'abc';
+      bot.onMessage(message);
 
-        const message = {
-          content: 'this image url',
-          reply: (text) => {
-            response = text;
-          },
-          author: {
-            id: userId,
-          },
-          channel: {
-            name: channelNameA,
-          },
-        };
+      expect(mockFn.mock.calls.length).toBe(0);
+    });
 
-        const bot = new MusicBot({});
+    it('should reply to the user if the bot was mentioned', () => {
+      const channelName = 'test-channel';
+      const mockMessageHandler = jest.fn();
 
-        bot.bot.user = { id: botId };
-        bot.activeTextChannel = { name: channelNameB };
+      const bot = new MusicBot({});
+      bot.messageHandler = mockMessageHandler;
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: channelName } });
 
-        bot.onMessage(message);
+      const message = {
+        author: { id: 456 },
+        channel: { name: channelName },
+        isMentioned: () => true,
+        content: 'hi there',
+      };
 
-        expect(response).toBe('abc');
-      });
+      bot.onMessage(message);
 
-      test('it replies directly to the user if it was mentioned', () => {
-        const userId = 'itme456';
-        const botId = 'itme123';
-        const channelName = 'channelname123';
+      expect(mockMessageHandler.mock.calls.length).toBe(1);
+    });
 
-        const expectedOutput = format(
-          defaultReplies.general.mentionedMessage,
-          userId,
-          `${defaultSettings.commandPrefix}help`,
-        );
+    it("will not do anything when it's just a message in the channel", () => {
+      const channelName = 'test-channel';
+      const mockMessageHandler = jest.fn();
 
-        let response;
+      const bot = new MusicBot({});
+      bot.messageHandler = mockMessageHandler;
+      bot.bot = { user: { id: 123 } };
+      bot.setState({ activeTextChannel: { name: channelName } });
 
-        const message = {
-          content: 'hello!',
-          author: {
-            id: userId,
-          },
-          member: {
-            toString: () => userId,
-          },
-          channel: {
-            name: channelName,
-            send: (text) => {
-              response = text;
-            },
-          },
-          isMentioned: () => true,
-        };
+      const message = {
+        author: { id: 456 },
+        channel: { name: channelName },
+        isMentioned: () => false,
+      };
+
+      bot.onMessage(message);
+
+      expect(mockMessageHandler.mock.calls.length).toBe(0);
+    });
+
+    describe('it should attempt to interpret the message as a command if the first character is the `COMMAND_PREFIX`', () => {
+      it('should return the `UNKNOWN_COMMAND` message to the channel if the command was unknown', () => {
+        const channelName = 'test-channel';
+        const mockMessageHandler = jest.fn();
 
         const bot = new MusicBot({});
-
-        bot.bot.user = { id: botId };
-        bot.activeTextChannel = { name: channelName };
-
-        bot.onMessage(message);
-
-        expect(response).toBe(expectedOutput);
-      });
-
-      test('it attempts to handle the command if the message begun with the command prefix', () => {
-        const userId = 'itme456';
-        const botId = 'itme123';
-        const channelName = 'channelname123';
-
-        let response;
+        bot.messageHandler = mockMessageHandler;
+        bot.bot = { user: { id: 123 } };
+        bot.setState({ activeTextChannel: { name: channelName } });
 
         const message = {
-          content: '!help',
-          author: {
-            id: userId,
-          },
-          member: {
-            toString: () => userId,
-          },
-          channel: {
-            name: channelName,
-          },
+          author: { id: 456 },
+          channel: { name: channelName },
+          content: '!unknownCommand',
           isMentioned: () => false,
         };
 
-        const bot = new MusicBot({});
+        bot.onMessage(message);
 
-        bot.bot.user = { id: botId };
-        bot.activeTextChannel = { name: channelName };
-        bot.handleCommand = (cmdMessage) => {
-          response = cmdMessage.content;
+        expect(mockMessageHandler.mock.calls[0][1]).toBe('UNKNOWN_COMMAND');
+      });
+
+      it("should call the command handler with the command's alias, args and the message", () => {
+        const channelName = 'test-channel';
+        const mockCommandHandler = jest.fn();
+
+        const bot = new MusicBot({});
+        bot.commandHandler = mockCommandHandler;
+        bot.bot = { user: { id: 123 } };
+        bot.setState({ activeTextChannel: { name: channelName } });
+
+        const message = {
+          author: { id: 456 },
+          channel: { name: channelName },
+          content: '!help arg1',
+          isMentioned: () => false,
         };
 
         bot.onMessage(message);
 
-        expect(response).toBe(message.content);
+        expect(mockCommandHandler.mock.calls[0][0]).toBe('help_command');
+        expect(mockCommandHandler.mock.calls[0][1][0]).toBe('arg1');
+        expect(mockCommandHandler.mock.calls[0][2]).toEqual(message);
       });
     });
   });
 
-  xdescribe('onDisconnect()', () => {
-    describe('When a disconnect happens', () => {
-      test('the bot logs a message to the console with the event', () => {
-        expect(false).toBe(true);
-      });
+  describe('onDisconnect()', () => {
+    it('calls the logger to log an error message to the console', () => {
+      const spy = jest.spyOn(global.console, 'error');
+
+      const error = { reason: 'testing', code: 0 };
+      const bot = new MusicBot({});
+
+      try {
+        bot.onDisconnect(error);
+      } catch (e) {} // eslint-disable-line
+
+      expect(spy.mock.calls[0][1]).toBe(
+        `Bot was disconnected from server.\nReason: ${error.reason}\nCode: ${error.code}`,
+      );
+
+      spy.mockReset();
+      spy.mockRestore();
+    });
+
+    it('throws an Error when disconnected', () => {
+      const error = { reason: 'testing', code: 0 };
+      const bot = new MusicBot({});
+
+      let result;
+
+      try {
+        bot.onDisconnect(error);
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe('Bot was disconnected from server.');
     });
   });
 
-  xdescribe('run()', () => {
-    describe('When the bot is started', () => {
-      test('it checks that a token, serverId and textChannelId were set', () => {
-        expect(false).toBe(true);
-      });
+  describe('run()', () => {
+    it('throws an Error if a `token` is not provided', () => {
+      const bot = new MusicBot({});
+
+      let result;
+
+      try {
+        bot.run();
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe("Failed to initialise: a 'token' was not provided in the config!");
+    });
+
+    it('throws an Error if a `serverId` is not provided', () => {
+      const bot = new MusicBot({ token: 'abc' });
+
+      let result;
+
+      try {
+        bot.run();
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe("Failed to initialise: a 'serverId' was not provided in the config!");
+    });
+
+    it('throws an Error if a `textChannelId` is not provided', () => {
+      const bot = new MusicBot({ token: 'abc', serverId: 'def' });
+
+      let result;
+
+      try {
+        bot.run();
+      } catch (e) {
+        result = e;
+      }
+
+      expect(result.message).toBe("Failed to initialise: a 'textChannelId' was not provided in the config!");
+    });
+
+    it('registers the listener functions', () => {
+      const bot = new MusicBot({ token: 'abc', serverId: 'def', textChannelId: 'ghi' });
+
+      const mockFn = jest.fn();
+      bot.bot.on = mockFn;
+
+      bot.run();
+
+      expect(mockFn.mock.calls[0][0]).toBe('ready');
+      expect(mockFn.mock.calls[0][1]).toBeInstanceOf(Function);
+
+      expect(mockFn.mock.calls[1][0]).toBe('message');
+      expect(mockFn.mock.calls[1][1]).toBeInstanceOf(Function);
+
+      expect(mockFn.mock.calls[2][0]).toBe('disconnect');
+      expect(mockFn.mock.calls[2][1]).toBeInstanceOf(Function);
+    });
+
+    it('calls `bot.login` if all is well', () => {
+      const token = 'abc';
+      const bot = new MusicBot({ token, serverId: 'def', textChannelId: 'ghi' });
+
+      const mockFn = jest.fn();
+      bot.bot.login = mockFn;
+
+      bot.run();
+
+      expect(mockFn.mock.calls.length).toBe(1);
+      expect(mockFn.mock.calls[0][0]).toBe(token);
     });
   });
 });

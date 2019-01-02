@@ -1,7 +1,7 @@
 {
-  "name": "discord-musicbot",
-  "version": "0.1.5",
-  "description": "A music bot for Discord servers, self-hosted and easy to use.",
+  "name": "@south-paw/discord-music-bot",
+  "version": "0.0.1",
+  "description": "A music bot for Discord servers, self-hosted, easy to use and extendable.",
   "keywords": [
     "discord",
     "bot",
@@ -10,10 +10,7 @@
     "radio"
   ],
   "homepage": "https://github.com/South-Paw/discord-music-bot",
-  "bugs": {
-    "url": "https://github.com/South-Paw/discord-music-bot/issues",
-    "email": "hello@southpaw.co.nz"
-  },
+  "bugs": "https://github.com/South-Paw/discord-music-bot/issues",
   "license": "GPL-3.0",
   "author": {
     "name": "Alex Gabites",
@@ -21,8 +18,12 @@
     "url": "http://southpaw.co.nz/"
   },
   "files": [
+    "bin",
     "src"
   ],
+  "bin": {
+    "discord-music-bot": "./bin/cli.js"
+  },
   "main": "src/index.js",
   "repository": {
     "type": "git",
@@ -30,25 +31,32 @@
   },
   "scripts": {
     "lint": "eslint ./src",
-    "test": "jest",
-    "test/coverage": "jest --coverage"
+    "prepublishOnly": "yarn lint && yarn test",
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "test": "jest"
   },
   "dependencies": {
-    "discord.js": "^11.3.0",
-    "ffmpeg-binaries": "^3.2.2-3",
-    "node-opus": "^0.2.7",
-    "string-format": "^0.5.0",
-    "url-parse": "^1.2.0",
-    "ytdl-core": "^0.20.2"
+    "dateformat": "^3.0.3",
+    "deepmerge": "^3.0.0",
+    "discord.js": "^11.4.2",
+    "meow": "^5.0.0",
+    "string-format": "^2.0.0"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
-    "eslint": "^4.18.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.9.0",
-    "jest": "^22.4.2"
+    "coveralls": "^3.0.2",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3"
   },
   "engines": {
     "node": ">=8.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -1,3 +1,15 @@
+# dependencies
 node_modules
-npm-debug.log*
-/coverage
+
+# generated folders
+coverage
+
+# all log files
+*.log*
+
+# ignore editor generated files
+.vscode
+.idea
+
+# OS generated files
+**/.DS_Store

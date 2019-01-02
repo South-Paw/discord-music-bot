@@ -1,9 +1,9 @@
 # Discord Music Bot
 
-🎧 A music bot for Discord servers, self-hosted and easy to use.
+🎧 A music bot for Discord servers, self-hosted, easy to use and extendable.
 
-[![discord-musicbot on npm](https://nodei.co/npm/discord-musicbot.png)](https://nodei.co/npm/discord-musicbot/)
 
+[![npm](https://img.shields.io/npm/v/@south-paw/discord-music-bot.svg)](https://www.npmjs.com/package/@south-paw/discord-music-bot)
 [![CI Status](https://img.shields.io/travis/South-Paw/discord-music-bot.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
 [![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot.svg)](https://coveralls.io/github/South-Paw/discord-music-bot)
 [![Dependencies](https://david-dm.org/South-Paw/discord-music-bot.svg)](https://david-dm.org/South-Paw/discord-music-bot)
@@ -11,54 +11,63 @@
 
 ---
 
-**Note: This is still very much a work-in-progress and will contain bugs!**
+## 🐉 HERE BE DRAGONS
 
-* Documentation will be added when there's something a bit more tangible to use.
-* A `v1.0.0` release will be tagged when it's a bit more completed.
+**This bot is still a work-in-progress and will contain bugs!**
 
-Until then, watch this space and let me know if there's anything I should consider building into it by [raising an issue](https://github.com/South-Paw/discord-music-bot/issues/new).
+If you manage to find any, please report them [here](https://github.com/South-Paw/discord-music-bot/issues) so they can be squashed.
 
-Also check out the [v1.0.0 board](https://github.com/South-Paw/discord-music-bot/projects/6) for progress and feature report.
+## Features
 
-If you get this running, use `!help` to get a list of commands.
+* Yes.
 
-## Example usage
+## 🤖 How do I use this?
 
-### Basic
+**You must first have...**
 
-Install: `npm i discord-musicbot`
+* A `discord token`, `server id` and `text channel id` for your bot. (TODO: [read this if you don't have those](#TODO))
+* A computer that has working internet
+* The ability to follow instructions.
+* Some common sense.
 
-Create a file called `run.js` and place the following in it (replace variables where applicable).
+And I thought this note would be covered under common sense but:
 
-```js
-const MusicBot = require('discord-musicbot');
+```
+⚠️ -------------------------------- ⚠️
+ | DO NOT COMMIT OR POST YOUR TOKEN  |
+⚠️ -------------------------------- ⚠️
 
-const config = {
-  // these 3 are always required.
-  token: 'YOUR DISCORD TOKEN',
-  serverId: 'YOUR SERVER ID',
-  textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
-
-  // permissions is technically optional, but if you want to access to all
-  // permissions you'll need to at the very least make yourself an admin.
-  permissions: {
-    users: {
-      'YOUR USER ID': 'admin',
-    },
-  }
-};
-
-const musicBot = new MusicBot(config);
-
-musicBot.run();
+and if you go do that or already have done it... reset it.
 ```
 
-Once done, start the bot with with `node run.js`.
+### Install on Windows
 
-### Advanced
+1. Install [Node.js](https://nodejs.org/en/) (Version 8 or above)
+2. Open a Powershell or Command Prompt window
+    * **Tip:** Start > Run > type `powershell.exe` OR type `cmd.exe` > Enter
+3. Type `npm i -g @south-paw/discord-music-bot` to install the bot.
+4. Run the bot from the same window by typing `discord-music-bot -t YOUR_TOKEN -s YOUR_SERVER_ID -c YOUR_CHANNEL_ID`
+5. When you want to start the bot again (after a restart or shutdown), just run the command in step 4.
+
+### Install on Linux
+
+1. todo
+
+### Install on OSX
+
+1. todo
+
+## 📦 Advanced Usage
+
+1. Create a new folder for the bot script
+2. Open a command prompt or terminal window in the folder
+3. Install the npm package with `npm i @south-paw/discord-music-bot`
+4. Create a file called `run.js` (or whatever you wish to call it)
+5. Follow the example below for what you're able to configure and how
+6. Start the bot using `node run.js` from inside the folder
 
 ```js
-const MusicBot = require('discord-musicbot');
+// example of `run.js`
 
 const config = {
   // these 3 are always required.
@@ -66,60 +75,19 @@ const config = {
   serverId: 'YOUR SERVER ID',
   textChannelId: 'YOUR COMMANDS TEXT CHANNEL ID',
 
-  // override any default settings.
-  // see `src/config/settings.js` for an idea of structure here.
-  settings: {
-    commandPrefix: '~',
-  },
-
-  // customize the replies you receive.
-  // see `src/config/replies.js` for an idea of structure here.
-  replies: {
-    general: {
-      unknownCommand: 'Looks like I don\'t know that one!',
-    },
-  },
-
-  // customize log messages... I dunno why you'd want to do it, but I've
-  // allowed for it all the same.
-  // see `src/config/logging.js` for an idea of structure here.
-  logging: {
-    connected: 'Bot started and connected.',
-  },
-
-  // set up custom user permission groups and assign users to them.
-  permissions: {
-    groups: {
-      // if you provide an already existing group, it will override that
-      // groups default permissions.
-      admin: {
-        disconnect: true,
-        setavatar: true,
-        setusername: true,
-      },
-
-      // you can define new groups and add permissions to them. All groups
-      // will still inherit the global permissions though so if you want to
-      // restrict a group down you'll need to turn perms off.
-      poweruser: {
-        disconnect: true,
-      },
-    },
-    // ... and you can define multiple users to a group.
-    // note; there is no 'inheritance' between groups, if a group does not
-    // have the permission set then it falls back to the global permissions.
-    users: {
-      'YOUR USER ID': 'admin',
-      'FRIENDS USER ID': 'admin',
-      'ANOTHER USER ID': 'poweruser',
-      'YET ANOTHER USER ID': 'nogroup', // undefined group, will use global perms.
-    },
-  }
+  // TODO: other options
 };
 
-const musicBot = new MusicBot(config);
+// this `while (true)` will ensure the bot restarts upon an Exception occurring
+while (true) {
+  const musicBot = new MusicBot(config);
 
-musicBot.run();
+  try {
+    musicbot.run();
+  } catch (e) {
+    console.log(e);
+  }
+}
 ```
 
 ## License
