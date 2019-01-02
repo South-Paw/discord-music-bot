@@ -30,9 +30,8 @@
     "url": "https://github.com/South-Paw/discord-music-bot"
   },
   "scripts": {
-    "lint": "eslint ./src",
+    "lint": "eslint .",
     "prepublishOnly": "yarn lint && yarn test",
-    "prettier": "prettier --write \"src/**/*.js\"",
     "test": "jest"
   },
   "dependencies": {
