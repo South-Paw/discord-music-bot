@@ -1,6 +1,7 @@
 const MusicBot = require('./index');
 const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } = require('./constants');
 const { defaultMessageStrings } = require('./defaults/messages');
+const Command = require('./commands/Command');
 
 const defaultState = {
   activeTextChannel: null,
@@ -258,11 +259,60 @@ describe('MusicBot', () => {
       expect(mockFn.mock.calls[0][1]).toBe("Failed to find command with key 'unknown_key'");
     });
 
-    xit('logs a message and args used if the command exists', () => {});
+    it('logs a message and args used if the command exists', () => {
+      const mockLogger = jest.fn();
+      const mockMessageHandler = jest.fn();
 
-    xit("logs a message if the user doesn't have permission for the command", () => {});
+      const bot = new MusicBot({});
 
-    xit('runs the command if everything is okay', () => {});
+      bot.logger = mockLogger;
+      bot.messageHandler = mockMessageHandler;
+
+      bot.commandHandler('setUsername_command', ['arg1', 'arg2', 'arg3'], { member: { displayName: 'test user' } });
+
+      expect(mockLogger.mock.calls[0][1]).toBe(
+        '\'test user\' called \'setUsername_command\' with ["arg1","arg2","arg3"]',
+      );
+    });
+
+    it("logs a message and replies to the user if they don't have permission for the command", () => {
+      const mockLogger = jest.fn();
+      const mockMessageHandler = jest.fn();
+
+      const bot = new MusicBot({});
+
+      bot.logger = mockLogger;
+      bot.messageHandler = mockMessageHandler;
+
+      bot.commandHandler('setUsername_command', ['newName'], { member: { displayName: 'test user' } });
+
+      expect(mockLogger.mock.calls[1][1]).toBe("'test user' does not have permission for 'setUsername_command'");
+      expect(mockMessageHandler.mock.calls[0][1]).toBe('NO_PERMISSION');
+    });
+
+    it('runs the command if everything is okay', () => {
+      const mockCommandRun = jest.fn();
+      const mockLogger = jest.fn();
+      const mockMessageHandler = jest.fn();
+
+      const bot = new MusicBot({});
+
+      class MockCommand extends Command {
+        run() {
+          mockCommandRun(this.args);
+        }
+      }
+
+      bot.settings.commands.help_command = MockCommand;
+      bot.logger = mockLogger;
+      bot.messageHandler = mockMessageHandler;
+
+      const args = ['arg1', 'arg2', 'arg3'];
+
+      bot.commandHandler('help_command', args, { member: { displayName: 'test user' } });
+
+      expect(mockCommandRun.mock.calls[0][0]).toBe(args);
+    });
   });
 
   describe('onReady()', () => {

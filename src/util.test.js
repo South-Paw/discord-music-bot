@@ -16,6 +16,6 @@ describe('Utilities', () => {
   });
 
   xdescribe('getLoggerPrefix()', () => {
-    // noop
+    it('returns the logger prefix', () => {});
   });
 });
