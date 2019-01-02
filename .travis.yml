@@ -1,6 +1,13 @@
 language: node_js
+
 node_js:
-  - "8"
+  - "10"
+
 script:
   - yarn lint
   - yarn test --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
