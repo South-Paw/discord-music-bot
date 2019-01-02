@@ -31,7 +31,7 @@ const cliOptions = {
 const cli = meow(
   `
     Usage:
-      discord-musicbot [options]
+      discord-music-bot [arguments]
 
     Required Arguments:
       --token, -t       Your Discord token.

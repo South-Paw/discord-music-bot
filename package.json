@@ -9,8 +9,8 @@
     "musicbot",
     "radio"
   ],
-  "homepage": "https://github.com/South-Paw/discord-musicbot",
-  "bugs": "https://github.com/South-Paw/discord-musicbot/issues",
+  "homepage": "https://github.com/South-Paw/discord-music-bot",
+  "bugs": "https://github.com/South-Paw/discord-music-bot/issues",
   "license": "GPL-3.0",
   "author": {
     "name": "Alex Gabites",
@@ -22,12 +22,12 @@
     "src"
   ],
   "bin": {
-    "discord-musicbot": "./bin/cli.js"
+    "discord-music-bot": "./bin/cli.js"
   },
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/South-Paw/discord-musicbot"
+    "url": "https://github.com/South-Paw/discord-music-bot"
   },
   "scripts": {
     "lint": "eslint ./src",

@@ -3,11 +3,11 @@
 🎧 A music bot for Discord servers, self-hosted, easy to use and extendable.
 
 
-[![npm](https://img.shields.io/npm/v/discord-musicbot.svg)](https://www.npmjs.com/package/discord-musicbot)
-[![CI Status](https://img.shields.io/travis/South-Paw/discord-musicbot/refactor.svg)](https://travis-ci.org/South-Paw/discord-musicbot)
-[![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-musicbot/refactor.svg)](https://coveralls.io/github/South-Paw/discord-musicbot?branch=refactor)
-[![Dependencies](https://david-dm.org/South-Paw/discord-musicbot/refactor.svg)](https://david-dm.org/South-Paw/discord-musicbot/refactor)
-[![Dev Dependencies](https://david-dm.org/South-Paw/discord-musicbot/refactor/dev-status.svg)](https://david-dm.org/South-Paw/discord-musicbot/refactor?type=dev)
+[![npm](https://img.shields.io/npm/v/@south-paw/discord-music-bot.svg)](https://www.npmjs.com/package/@south-paw/discord-music-bot)
+[![CI Status](https://img.shields.io/travis/South-Paw/discord-music-bot/refactor.svg)](https://travis-ci.org/South-Paw/discord-music-bot)
+[![Coveralls Status](https://img.shields.io/coveralls/github/South-Paw/discord-music-bot/refactor.svg)](https://coveralls.io/github/South-Paw/discord-music-bot?branch=refactor)
+[![Dependencies](https://david-dm.org/South-Paw/discord-music-bot/refactor.svg)](https://david-dm.org/South-Paw/discord-music-bot/refactor)
+[![Dev Dependencies](https://david-dm.org/South-Paw/discord-music-bot/refactor/dev-status.svg)](https://david-dm.org/South-Paw/discord-music-bot/refactor?type=dev)
 
 ---
 
@@ -15,7 +15,7 @@
 
 **This bot is still a work-in-progress and will contain bugs!**
 
-If you manage to find any, please report them [here](https://github.com/South-Paw/discord-musicbot/issues) so they can be squashed.
+If you manage to find any, please report them [here](https://github.com/South-Paw/discord-music-bot/issues) so they can be squashed.
 
 ## Features
 
@@ -37,7 +37,7 @@ And I thought this note would be covered under common sense but:
  | DO NOT COMMIT OR POST YOUR TOKEN  |
 ⚠️ -------------------------------- ⚠️
 
-and if you do or already have... reset it.
+and if you go do that or already have done it... reset it.
 ```
 
 ### Install on Windows
@@ -45,8 +45,8 @@ and if you do or already have... reset it.
 1. Install [Node.js](https://nodejs.org/en/) (Version 8 or above)
 2. Open a Powershell or Command Prompt window
     * **Tip:** Start > Run > type `powershell.exe` OR type `cmd.exe` > Enter
-3. Type `npm i -g discord-musicbot` to install the bot.
-4. Run the bot from the same window by typing `discord-musicbot -t YOUR_TOKEN -s YOUR_SERVER_ID -c YOUR_CHANNEL_ID`
+3. Type `npm i -g @south-paw/discord-music-bot` to install the bot.
+4. Run the bot from the same window by typing `discord-music-bot -t YOUR_TOKEN -s YOUR_SERVER_ID -c YOUR_CHANNEL_ID`
 5. When you want to start the bot again (after a restart or shutdown), just run the command in step 4.
 
 ### Install on Linux
@@ -61,7 +61,7 @@ and if you do or already have... reset it.
 
 1. Create a new folder for the bot script
 2. Open a command prompt or terminal window in the folder
-3. Install the npm package with `npm i discord-musicbot`
+3. Install the npm package with `npm i @south-paw/discord-music-bot`
 4. Create a file called `run.js` (or whatever you wish to call it)
 5. Follow the example below for what you're able to configure and how
 6. Start the bot using `node run.js` from inside the folder
@@ -92,7 +92,7 @@ while (true) {
 
 ## License
 
-This project is licensed under [GNU GPLv3](https://github.com/South-Paw/discord-musicbot/blob/master/LICENSE)
+This project is licensed under [GNU GPLv3](https://github.com/South-Paw/discord-music-bot/blob/master/LICENSE)
 
 ```
 Copyright (C) 2017 Alex Gabites
