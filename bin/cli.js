@@ -49,10 +49,10 @@ const users = {};
 
 if (Array.isArray(cli.flags.admin)) {
   cli.flags.admin.forEach(id => {
-    users[id] = true;
+    users[id] = 'admin';
   });
 } else if (typeof cli.flags.admin === 'string') {
-  users[cli.flags.admin] = true;
+  users[cli.flags.admin] = 'admin';
 }
 
 const musicBot = new MusicBot({
