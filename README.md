@@ -25,8 +25,8 @@ If you manage to find any, please report them [here](https://github.com/South-Pa
 
 **You must first have...**
 
-* A `discord token`, `server id` and `text channel id` for your bot. ([read this if you don't have those](#TODO))
-* The IDs of the users you wish to give admin permissions on the bot to
+* A `discord token`, `server id` and `text channel id` for your bot, [read this if you don't have those](discord-bot-credentials)
+* The IDs of the users you wish to give admin permissions on the bot to, [read this if you don't have that](discord-getting-user-ids)
 * A computer that has working internet
 * The ability to follow instructions
 * Some common sense
@@ -45,7 +45,7 @@ and if you go do that or already have done it... reset it.
 
 1. Install [Node.js](https://nodejs.org/en/) (Version 10 or above)
 2. Ensure you have [ffmpeg](https://www.ffmpeg.org/) installed and on your system's Path
-    * If you do not have ffmpeg installed and on your system's Path, [read this to get it set up](#TODO)
+    * If you do not have ffmpeg installed and on your system's Path, [read this to get it set up](installing-ffmpeg-on-windows)
 3. Open a Powershell or Command Prompt window
     * Click Start > Run > type `powershell.exe` OR type `cmd.exe` > Press enter
 4. Type `npm i -g @south-paw/discord-music-bot` to install the bot
@@ -122,3 +122,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 ```
+
+[discord-bot-credentials]: https://github.com/South-Paw/discord-music-bot/blob/master/docs/discord-bot-credentials.md
+[discord-getting-user-ids]: https://github.com/South-Paw/discord-music-bot/blob/master/docs/discord-getting-user-ids.md
+[installing-ffmpeg-on-windows]: https://github.com/South-Paw/discord-music-bot/blob/master/docs/installing-ffmpeg-on-windows.md
