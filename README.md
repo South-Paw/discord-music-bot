@@ -43,6 +43,8 @@ and if you go do that or already have done it... reset it.
 
 ### Install on Windows
 
+⚠️ Package is not published to npm yet! ⚠️
+
 1. Install [Node.js](https://nodejs.org/en/) (Version 10 or above)
 2. Ensure you have [ffmpeg](https://www.ffmpeg.org/) installed and on your system's Path
     * If you do not have ffmpeg installed and on your system's Path, [read this to get it set up](https://github.com/South-Paw/discord-music-bot/blob/master/docs/installing-ffmpeg-on-windows.md)
@@ -62,6 +64,8 @@ and if you go do that or already have done it... reset it.
 1. todo
 
 ## 📦 Advanced Usage
+
+⚠️ Package is not published to npm yet! ⚠️
 
 1. Create a new folder for the bot script
 2. Open a command prompt or terminal window in the folder
