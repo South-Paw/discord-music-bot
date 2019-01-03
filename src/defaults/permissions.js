@@ -6,6 +6,7 @@ const defaultGlobalPermissions = {
 
 const defaultGroupPermissions = {
   admin: {
+    ...defaultGlobalPermissions,
     setAvatar_command: true,
     setUsername_command: true,
   },

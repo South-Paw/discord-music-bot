@@ -8,6 +8,20 @@ const defaultState = {
 };
 
 describe('MusicBot', () => {
+  xdescribe('constructor', () => {
+    it('merges config `commands` into `this.settings.commands` as expected', () => {});
+
+    it('merges config `commandDetails` into `this.settings.commandDetails` as expected', () => {});
+
+    it('merges config `messageStrings` into `this.settings.messageStrings` as expected', () => {});
+
+    it('merges config `permissions.global` into `this.settings.permissions.global` as expected', () => {});
+
+    it('merges config `permissions.groups` into `this.settings.permissions.groups` as expected', () => {});
+
+    it('merges config `permissions.users` into `this.settings.permissions.users` as expected', () => {});
+  });
+
   describe('isDebug()', () => {
     it('returns false by default', () => {
       const bot = new MusicBot({});

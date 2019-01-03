@@ -46,6 +46,13 @@ class MusicBot {
 
     const { global: globalPermissions = {}, groups: groupPermissions = {}, users: usersPermissions = {} } = permissions;
 
+    const groupPermissionsWithDefaults = {};
+
+    // Ensure that any provided groupPermissions also contain the defaultGlobalPermissions, otherwise groups may not have access to all commands.
+    Object.keys(groupPermissions).forEach(key => {
+      groupPermissionsWithDefaults[key] = deepmerge(defaultGlobalPermissions, groupPermissions[key]);
+    });
+
     this.settings = {
       token,
       serverId,
@@ -56,7 +63,7 @@ class MusicBot {
       messageStrings: deepmerge(defaultMessageStrings, messageStrings),
       permissions: {
         global: deepmerge(defaultGlobalPermissions, globalPermissions),
-        groups: deepmerge(defaultGroupPermissions, groupPermissions),
+        groups: deepmerge(defaultGroupPermissions, groupPermissionsWithDefaults),
         users: usersPermissions,
       },
       preferences: deepmerge(defaultPreferences, preferences),
