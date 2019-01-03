@@ -78,16 +78,8 @@ const config = {
   // TODO: other options
 };
 
-// this `while (true)` will ensure the bot restarts upon an Exception occurring
-while (true) {
-  const musicBot = new MusicBot(config);
-
-  try {
-    musicbot.run();
-  } catch (e) {
-    console.log(e);
-  }
-}
+const musicbot = new MusicBot(config);
+musicbot.run();
 ```
 
 ## License
