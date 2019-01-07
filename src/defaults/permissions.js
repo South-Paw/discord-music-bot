@@ -2,6 +2,8 @@ const defaultGlobalPermissions = {
   help_command: true,
   setAvatar_command: false,
   setUsername_command: false,
+  join_command: true,
+  leave_command: true,
 };
 
 const defaultGroupPermissions = {

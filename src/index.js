@@ -27,7 +27,7 @@ const { LOG_INFO, LOG_WARN, LOG_ERROR, LOG_DEBUG, SEND, REPLY, DIRECT_MESSAGE } 
 const { findCommandKeyByAlias, getLoggerPrefix } = require('./util');
 
 const defaultState = {
-  activeTextChannel: null,
+  activeTextChannelId: null,
 };
 
 class MusicBot {
@@ -70,6 +70,8 @@ class MusicBot {
       debug,
     };
 
+    this.activeVoiceConnection = null;
+
     this.state = { ...defaultState };
 
     this.bot = new Discord.Client();
@@ -105,7 +107,22 @@ class MusicBot {
   }
 
   resetState() {
-    this.state = { ...defaultState };
+    this.state = {
+      ...defaultState,
+      activeTextChannelId: this.state.activeTextChannelId,
+    };
+  }
+
+  setActiveVoiceConnection(connection) {
+    this.activeVoiceConnection = connection;
+  }
+
+  resetActiveVoiceConnection() {
+    if (this.activeVoiceConnection) {
+      this.activeVoiceConnection.disconnect();
+    }
+
+    this.activeVoiceConnection = null;
   }
 
   messageHandler(type, key, message, ...other) {
@@ -180,16 +197,16 @@ class MusicBot {
       throw new Error(`Failed to find textChannelId '${textChannelId}'`);
     }
 
-    this.setState({ activeTextChannel });
+    this.setState({ activeTextChannelId: activeTextChannel.id });
 
     this.logger(LOG_INFO, `Successfully connected to '${server.name}'`);
   }
 
   onMessage(message) {
     const { author, channel } = message;
-    const { activeTextChannel } = this.state;
+    const { activeTextChannelId } = this.state;
 
-    const isInCommandsChannel = channel.name === activeTextChannel.name;
+    const isInCommandsChannel = channel.id === activeTextChannelId;
     const isNotOwnMessage = author.id !== this.bot.user.id;
 
     if (isInCommandsChannel && isNotOwnMessage) {

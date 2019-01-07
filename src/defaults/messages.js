@@ -15,6 +15,9 @@ const defaultMessageStrings = {
   SET_USERNAME_COMMAND_SUCCESS: ':ok_hand: Username successfully set!',
   SET_USERNAME_COMMAND_ERROR: 'Unable to set username.\n```{}```',
   SET_USERNAME_COMMAND_INVALID_NAME: "Uhh... that doesn't seem to be something I could name myself...",
+  JOIN_COMMAND_CANT_JOIN: 'Unable to join your channel, are you sure I have permissions for it?',
+  JOIN_COMMAND_ERROR: 'Something went wrong while joining the voice channel:\n```{}```',
+  JOIN_COMMAND_FAILED: 'You need to be in a voice channel before requesting I join you.',
 };
 
 const messageFunctions = {
@@ -31,6 +34,9 @@ const messageFunctions = {
   SET_USERNAME_COMMAND_SUCCESS: (string, bot, message) => string,
   SET_USERNAME_COMMAND_ERROR: (string, bot, message, error) => format(string, error),
   SET_USERNAME_COMMAND_INVALID_NAME: (string, bot, message) => string,
+  JOIN_COMMAND_CANT_JOIN: (string, bot, message) => string,
+  JOIN_COMMAND_ERROR: (string, bot, message, error) => format(string, error),
+  JOIN_COMMAND_FAILED: (string, bot, message) => string,
   /* eslint-enable prettier/prettier */
 };
 

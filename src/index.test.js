@@ -4,7 +4,7 @@ const { defaultMessageStrings } = require('./defaults/messages');
 const Command = require('./commands/Command');
 
 const defaultState = {
-  activeTextChannel: null,
+  activeTextChannelId: null,
 };
 
 describe('MusicBot', () => {
@@ -149,6 +149,44 @@ describe('MusicBot', () => {
       bot.resetState();
 
       expect(bot.state).toEqual(initialState);
+    });
+  });
+
+  describe('setActiveVoiceConnection', () => {
+    it('sets the active voice connection', () => {
+      const expected = 'expected-value';
+
+      const bot = new MusicBot({});
+
+      bot.setActiveVoiceConnection(expected);
+
+      expect(bot.activeVoiceConnection).toBe(expected);
+    });
+  });
+
+  describe('resetActiveVoiceConnection', () => {
+    it('clears the active voice connection and calls disconnect()', () => {
+      const mockFn = jest.fn();
+      const connection = { disconnect: mockFn };
+
+      const bot = new MusicBot({});
+
+      bot.activeVoiceConnection = connection;
+
+      bot.resetActiveVoiceConnection();
+
+      expect(mockFn.mock.calls.length).toBe(1);
+      expect(bot.activeVoiceConnection).toBe(null);
+    });
+
+    it("does not call disconnect() on the connection if it's not set", () => {
+      const bot = new MusicBot({});
+
+      bot.activeVoiceConnection = null;
+
+      bot.resetActiveVoiceConnection();
+
+      expect(bot.activeVoiceConnection).toBe(null);
     });
   });
 
@@ -380,16 +418,16 @@ describe('MusicBot', () => {
   describe('onMessage()', () => {
     it("should not reply to it's own messages", () => {
       const botUserId = 123;
-      const channelName = 'test-channel';
+      const channelId = 'test-channel';
       const mockFn = jest.fn();
 
       const bot = new MusicBot({});
       bot.bot = { user: { id: botUserId } };
-      bot.setState({ activeTextChannel: { name: channelName } });
+      bot.setState({ activeTextChannelId: channelId });
 
       const message = {
         author: { id: botUserId },
-        channel: { name: channelName, send: mockFn },
+        channel: { id: channelId, send: mockFn },
       };
 
       bot.onMessage(message);
@@ -402,11 +440,11 @@ describe('MusicBot', () => {
 
       const bot = new MusicBot({});
       bot.bot = { user: { id: 123 } };
-      bot.setState({ activeTextChannel: { name: 'test-channel' } });
+      bot.setState({ activeTextChannelId: 'test-channel' });
 
       const message = {
         author: { id: 456 },
-        channel: { name: 'test-channel2', send: mockFn },
+        channel: { id: 'test-channel2', send: mockFn },
       };
 
       bot.onMessage(message);
@@ -415,17 +453,17 @@ describe('MusicBot', () => {
     });
 
     it('should reply to the user if the bot was mentioned', () => {
-      const channelName = 'test-channel';
+      const channelId = 'test-channel';
       const mockMessageHandler = jest.fn();
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
       bot.bot = { user: { id: 123 } };
-      bot.setState({ activeTextChannel: { name: channelName } });
+      bot.setState({ activeTextChannelId: channelId });
 
       const message = {
         author: { id: 456 },
-        channel: { name: channelName },
+        channel: { id: channelId },
         isMentioned: () => true,
         content: 'hi there',
       };
@@ -436,17 +474,17 @@ describe('MusicBot', () => {
     });
 
     it("will not do anything when it's just a message in the channel", () => {
-      const channelName = 'test-channel';
+      const channelId = 'test-channel';
       const mockMessageHandler = jest.fn();
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
       bot.bot = { user: { id: 123 } };
-      bot.setState({ activeTextChannel: { name: channelName } });
+      bot.setState({ activeTextChannelId: channelId });
 
       const message = {
         author: { id: 456 },
-        channel: { name: channelName },
+        channel: { id: channelId },
         isMentioned: () => false,
       };
 
@@ -457,17 +495,17 @@ describe('MusicBot', () => {
 
     describe('it should attempt to interpret the message as a command if the first character is the `COMMAND_PREFIX`', () => {
       it('should return the `UNKNOWN_COMMAND` message to the channel if the command was unknown', () => {
-        const channelName = 'test-channel';
+        const channelId = 'test-channel';
         const mockMessageHandler = jest.fn();
 
         const bot = new MusicBot({});
         bot.messageHandler = mockMessageHandler;
         bot.bot = { user: { id: 123 } };
-        bot.setState({ activeTextChannel: { name: channelName } });
+        bot.setState({ activeTextChannelId: channelId });
 
         const message = {
           author: { id: 456 },
-          channel: { name: channelName },
+          channel: { id: channelId },
           content: '!unknownCommand',
           isMentioned: () => false,
         };
@@ -478,17 +516,17 @@ describe('MusicBot', () => {
       });
 
       it("should call the command handler with the command's alias, args and the message", () => {
-        const channelName = 'test-channel';
+        const channelId = 'test-channel';
         const mockCommandHandler = jest.fn();
 
         const bot = new MusicBot({});
         bot.commandHandler = mockCommandHandler;
         bot.bot = { user: { id: 123 } };
-        bot.setState({ activeTextChannel: { name: channelName } });
+        bot.setState({ activeTextChannelId: channelId });
 
         const message = {
           author: { id: 456 },
-          channel: { name: channelName },
+          channel: { id: channelId },
           content: '!help arg1',
           isMentioned: () => false,
         };
