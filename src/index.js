@@ -74,7 +74,7 @@ class MusicBot {
 
     this.state = { ...defaultState };
 
-    this.bot = new Discord.Client();
+    this.client = new Discord.Client();
   }
 
   isDebug() {
@@ -187,7 +187,7 @@ class MusicBot {
   onReady() {
     const { serverId, textChannelId } = this.settings;
 
-    const server = this.bot.guilds.get(serverId);
+    const server = this.client.guilds.get(serverId);
     if (!server) {
       throw new Error(`Failed to connect to serverId '${serverId}'`);
     }
@@ -207,7 +207,7 @@ class MusicBot {
     const { activeTextChannelId } = this.state;
 
     const isInCommandsChannel = channel.id === activeTextChannelId;
-    const isNotOwnMessage = author.id !== this.bot.user.id;
+    const isNotOwnMessage = author.id !== this.client.user.id;
 
     if (isInCommandsChannel && isNotOwnMessage) {
       // If the message begins with the command prefix
@@ -229,7 +229,7 @@ class MusicBot {
       }
 
       // If the message mentions the bot
-      if (message.isMentioned(this.bot.user)) {
+      if (message.isMentioned(this.client.user)) {
         this.messageHandler(SEND, 'BOT_MENTIONED', message);
       }
     }
@@ -257,13 +257,13 @@ class MusicBot {
       throw new Error(`${prefix} a 'textChannelId' was not provided in the config!`);
     }
 
-    this.bot.on('ready', () => this.onReady());
-    this.bot.on('message', message => this.onMessage(message));
-    this.bot.on('disconnect', event => this.onDisconnect(event));
+    this.client.on('ready', () => this.onReady());
+    this.client.on('message', message => this.onMessage(message));
+    this.client.on('disconnect', event => this.onDisconnect(event));
 
     this.logger(LOG_INFO, 'Logging into server...');
 
-    this.bot.login(token);
+    this.client.login(token);
   }
 }
 

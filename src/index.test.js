@@ -387,7 +387,7 @@ describe('MusicBot', () => {
       const textChannelId = 'test';
       const bot = new MusicBot({ serverId: 'test', textChannelId });
 
-      bot.bot.guilds.get = () => ({ channels: [] });
+      bot.client.guilds.get = () => ({ channels: [] });
 
       let result;
 
@@ -404,7 +404,7 @@ describe('MusicBot', () => {
       const textChannelId = 'test';
       const bot = new MusicBot({ serverId: 'test', textChannelId });
 
-      bot.bot.guilds.get = () => ({ channels: [{ id: textChannelId, type: 'text' }] });
+      bot.client.guilds.get = () => ({ channels: [{ id: textChannelId, type: 'text' }] });
 
       const mockFn = jest.fn();
       bot.logger = mockFn;
@@ -422,7 +422,7 @@ describe('MusicBot', () => {
       const mockFn = jest.fn();
 
       const bot = new MusicBot({});
-      bot.bot = { user: { id: botUserId } };
+      bot.client = { user: { id: botUserId } };
       bot.setState({ activeTextChannelId: channelId });
 
       const message = {
@@ -439,7 +439,7 @@ describe('MusicBot', () => {
       const mockFn = jest.fn();
 
       const bot = new MusicBot({});
-      bot.bot = { user: { id: 123 } };
+      bot.client = { user: { id: 123 } };
       bot.setState({ activeTextChannelId: 'test-channel' });
 
       const message = {
@@ -458,7 +458,7 @@ describe('MusicBot', () => {
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
-      bot.bot = { user: { id: 123 } };
+      bot.client = { user: { id: 123 } };
       bot.setState({ activeTextChannelId: channelId });
 
       const message = {
@@ -479,7 +479,7 @@ describe('MusicBot', () => {
 
       const bot = new MusicBot({});
       bot.messageHandler = mockMessageHandler;
-      bot.bot = { user: { id: 123 } };
+      bot.client = { user: { id: 123 } };
       bot.setState({ activeTextChannelId: channelId });
 
       const message = {
@@ -500,7 +500,7 @@ describe('MusicBot', () => {
 
         const bot = new MusicBot({});
         bot.messageHandler = mockMessageHandler;
-        bot.bot = { user: { id: 123 } };
+        bot.client = { user: { id: 123 } };
         bot.setState({ activeTextChannelId: channelId });
 
         const message = {
@@ -521,7 +521,7 @@ describe('MusicBot', () => {
 
         const bot = new MusicBot({});
         bot.commandHandler = mockCommandHandler;
-        bot.bot = { user: { id: 123 } };
+        bot.client = { user: { id: 123 } };
         bot.setState({ activeTextChannelId: channelId });
 
         const message = {
@@ -622,7 +622,7 @@ describe('MusicBot', () => {
       const bot = new MusicBot({ token: 'abc', serverId: 'def', textChannelId: 'ghi' });
 
       const mockFn = jest.fn();
-      bot.bot.on = mockFn;
+      bot.client.on = mockFn;
 
       bot.run();
 
@@ -641,7 +641,7 @@ describe('MusicBot', () => {
       const bot = new MusicBot({ token, serverId: 'def', textChannelId: 'ghi' });
 
       const mockFn = jest.fn();
-      bot.bot.login = mockFn;
+      bot.client.login = mockFn;
 
       bot.run();
 

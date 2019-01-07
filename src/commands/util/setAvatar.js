@@ -6,7 +6,7 @@ const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b(
 class SetAvatarCommand extends Command {
   run() {
     if (this.args[0] && this.args[0].match(urlRegex)) {
-      this.bot.bot.user
+      this.bot.client.user
         .setAvatar(this.args[0])
         .then(() => this.bot.messageHandler(REPLY, 'SET_AVATAR_COMMAND_SUCCESS', this.message))
         .catch(error => this.bot.messageHandler(REPLY, 'SET_AVATAR_COMMAND_ERROR', this.message, error));
