@@ -1,15 +1,23 @@
-# dependencies
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+logs
+results
+tmp
+
 node_modules
-
-# generated folders
 coverage
+dist
+.env
 
-# all log files
-*.log*
-
-# ignore editor generated files
-.vscode
-.idea
-
-# OS generated files
-**/.DS_Store
+# OS metadata
+.DS_Store
+Thumbs.db

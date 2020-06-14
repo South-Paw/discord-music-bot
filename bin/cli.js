@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const meow = require('meow');
-const MusicBot = require('../src/index.js');
+const MusicBot = require('../dist/index.js');
 
 const cliOptions = {
   flags: {
