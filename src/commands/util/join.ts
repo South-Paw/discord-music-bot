@@ -1,9 +1,9 @@
 import { Command, CommandObject, CommandPermissionLevel } from '../types';
 
 class JoinCommand extends Command {
-  run = () => {
-    console.log('command1');
-  };
+  run() {
+    console.log('join', this.bot.state);
+  }
 }
 
 const joinCommand: CommandObject = {

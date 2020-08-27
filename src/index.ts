@@ -37,7 +37,7 @@ export class MusicBot {
 
   private readonly settings: MusicBotSettings;
 
-  private state: MusicBotState;
+  public state: MusicBotState;
 
   private commands = commands;
 
@@ -72,11 +72,20 @@ export class MusicBot {
     this.init();
   }
 
-  setState = (nextState: MusicBotState) => {
+  public setState(nextState: MusicBotState) {
     this.state = deepmerge(this.state, nextState);
-  };
+  }
 
-  checkPermissions = ({ permissionLevel }: CommandObject, member: GuildMember | null) => {
+  public resetState() {
+    const textChannelId = this.state.activeTextChannelId;
+
+    this.state = {
+      ...defaultState,
+      activeTextChannelId: textChannelId,
+    };
+  }
+
+  private checkPermissions({ permissionLevel }: CommandObject, member: GuildMember | null) {
     if (permissionLevel === CommandPermissionLevel.ANY) {
       logger.debug(`command has no permissions`);
       return true;
@@ -101,9 +110,9 @@ export class MusicBot {
     }
 
     return false;
-  };
+  }
 
-  commandHandler = (command: CommandObject, args: string[], message: Message) => {
+  private commandHandler(command: CommandObject, args: string[], message: Message) {
     logger.info(
       `'${message.member?.displayName}' called '${command.details.name}' command with ${JSON.stringify(args)}`,
     );
@@ -118,14 +127,14 @@ export class MusicBot {
 
     const { command: Command } = command;
 
-    const cmd = new Command();
+    const cmd = new Command(this, args, message);
 
     cmd.run();
-  };
+  }
 
-  onReady = () => {};
+  private onReady() {}
 
-  onMessage = (message: Message) => {
+  private onMessage(message: Message) {
     const isInCommandChannel = message.channel.id === this.state.activeTextChannelId;
     const isNotOwnMessage = message.author.id !== this.client.user?.id;
     const isCommand = message.content[0] === '!';
@@ -151,23 +160,23 @@ export class MusicBot {
         message.reply(format(BOT_MENTIONED, this.settings.commandPrefix));
       }
     }
-  };
+  }
 
-  onDisconnect = (event: any) => {
+  private onDisconnect(event: any) {
     logger.debug('onDisconnect', event);
-  };
+  }
 
-  init = () => {
+  private init() {
     this.client.on('ready', () => this.onReady());
     this.client.on('message', (message) => this.onMessage(message));
     this.client.on('disconnect', (event) => this.onDisconnect(event));
-  };
+  }
 
-  start = () => {
+  public start() {
     const { token, textChannelId } = this.settings;
 
     this.setState({ activeTextChannelId: textChannelId });
 
     return this.client.login(token);
-  };
+  }
 }

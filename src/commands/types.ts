@@ -1,3 +1,6 @@
+import { Message } from 'discord.js';
+import { MusicBot } from '..';
+
 export enum CommandPermissionLevel {
   ANY = 'any',
   ROLE = 'role',
@@ -5,7 +8,19 @@ export enum CommandPermissionLevel {
 }
 
 export class Command {
-  run = () => {};
+  protected readonly bot: MusicBot;
+
+  protected readonly args: string[];
+
+  protected readonly message: Message;
+
+  constructor(bot: MusicBot, args: string[], message: Message) {
+    this.bot = bot;
+    this.args = args;
+    this.message = message;
+  }
+
+  public run() {}
 }
 
 export interface CommandObject {
